@@ -1,13 +1,15 @@
 #! /usr/bin/env python
 
+
+
 ###################################################################
 ##								 ##
-## Name: TBrate.py						 ##
+## Name: TWrate.py						 ##
 ## Author: Kevin Nash 						 ##
 ## Date: 6/5/2012						 ##
 ## Purpose: This program creates eta binned tags and probes 	 ##
 ##          as a function of Pt for data and MC for use with 	 ##
-##          TBrate_Maker.py.					 ##
+##          TWrate_Maker.py.					 ##
 ##								 ##
 ###################################################################
 
@@ -81,19 +83,19 @@ from Wprime_Functions import *
 
 #Load up cut values based on what selection we want to run 
 Cuts = LoadCuts(options.cuts)
-bpt = Cuts['bpt']
+wpt = Cuts['wpt']
 tpt = Cuts['tpt']
 dy = Cuts['dy']
 tmass = Cuts['tmass']
 nsubjets = Cuts['nsubjets']
 tau32 = Cuts['tau32']
+tau21 = Cuts['tau21']
 minmass = Cuts['minmass']
 sjbtag = Cuts['sjbtag']
-bmass = Cuts['bmass']
-btag = Cuts['btag']
+wmass = Cuts['wmass']
 eta1 = Cuts['eta1']
 eta2 = Cuts['eta2']
-eta3 = Cuts['eta3']
+
 
 #For large datasets we need to parallelize the processing
 jobs=int(options.jobs)
@@ -105,7 +107,7 @@ if jobs != 1:
 else:
 	print "Running over all events"
 
-run_b_SF = True
+
 #Based on what set we want to analyze, we find all Ntuple root files 
 files = Load_Ntuples(options.set)
 if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
@@ -114,7 +116,7 @@ elif (options.set.find('QCD') != -1):
 	settype ='QCD'
 	run_b_SF = False
 else :
-	settype = options.set.replace('right','').replace('left','').replace('mixed','')
+	settype = options.set.replace('right','').replace('left','')
 
 print 'The type of set is ' + settype
 
@@ -139,6 +141,19 @@ events = Events (files)
 
 puHandle    	= 	Handle("int")
 puLabel     	= 	( "ttbsmAna", "npvRealTrue" )
+
+CA8Handle     	= 	Handle( "vector<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double> > >")
+CA8Label      	= 	( "nsub", "CA8P4" )
+
+TopTau2Handle       = 	Handle( "std::vector<double>" )
+TopTau2Label    	= 	( "nsub" , "Tau2")
+
+TopTau3Handle       = 	Handle( "std::vector<double>" )
+TopTau3Label    	= 	( "nsub" , "Tau3")
+
+TopTau1Handle       = 	Handle( "std::vector<double>" )
+TopTau1Label    	= 	( "nsub" , "Tau1")
+
 
 
 #Load all hemisphere 0 objects
@@ -172,9 +187,6 @@ hemis0TopMassLabel  	= 	( "ttbsmAna", "topTagTopMassHemis0" )
 hemis0prCA8Handle  	= 	Handle ("vector<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double> > >")
 hemis0prCA8Label    	=	( "ttbsmAna", "wTagP4Hemis0" )
 
-
-hemis0BDiscHandle       = 	Handle( "std::vector<double>" )
-hemis0BDiscLabel    	= 	( "ttbsmAna" , "wTagBDiscHemis0CSV")
 
 #---------------------------------------------------------------------------------------------------------------------#
 
@@ -210,18 +222,15 @@ hemis1TopMassLabel  	= 	( "ttbsmAna", "topTagTopMassHemis1" )
 hemis1prCA8Handle     	= 	Handle( "vector<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double> > >")
 hemis1prCA8Label      	= 	( "ttbsmAna", "wTagP4Hemis1" )
 
-hemis1BDiscHandle       = 	Handle( "std::vector<double>" )
-hemis1BDiscLabel    	= 	( "ttbsmAna" , "wTagBDiscHemis1CSV")
-
 GenHandle = Handle( "vector<reco::GenParticle>" )
 GenLabel = ( "prunedGenParticles", "" )
 #---------------------------------------------------------------------------------------------------------------------#
 
 #Create the output file
 if jobs != 1:
-	f = TFile( "TBratefile"+options.set+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+".root", "recreate" )
+	f = TFile( "TWratefile"+options.set+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+".root", "recreate" )
 else:
-	f = TFile( "TBratefile"+options.set+"_PSET_"+options.cuts+".root", "recreate" )
+	f = TFile( "TWratefile"+options.set+"_PSET_"+options.cuts+".root", "recreate" )
 
 
 
@@ -231,13 +240,12 @@ print "Creating histograms"
 #Define Histograms
 f.cd()
 #---------------------------------------------------------------------------------------------------------------------#
-pteta1pretag          = TH1D("pteta1pretag",           "b Probe pt in 0<Eta<0.6",             400,  0,  2000 )
-pteta2pretag          = TH1D("pteta2pretag",           "b Probe pt in 0.6<Eta<1.25",             400,  0,  2000 )
-pteta3pretag          = TH1D("pteta3pretag",           "b Probe pt in 1.25<Eta<2.5",             400,  0,  2000 )
+pteta1pretag          = TH1D("pteta1pretag",           "b Probe pt in 0<Eta<1.0",             400,  0,  2000 )
+pteta2pretag          = TH1D("pteta2pretag",           "b Probe pt in 0.6<Eta<2.4",             400,  0,  2000 )
 
-pteta1          = TH1D("pteta1",           "b pt in 0<Eta<0.6",             400,  0,  2000 )
-pteta2          = TH1D("pteta2",           "b pt in 0.6<Eta<1.25",             400,  0,  2000 )
-pteta3          = TH1D("pteta3",           "b pt in 1.25<Eta<2.5",             400,  0,  2000 )
+pteta1          = TH1D("pteta1",           "b pt in 0<Eta<1.0",             400,  0,  2000 )
+pteta2          = TH1D("pteta2",           "b pt in 1.0<Eta<2.4",             400,  0,  2000 )
+
 
 pteta1pretag.Sumw2()
 pteta2pretag.Sumw2()
@@ -247,23 +255,18 @@ pteta1.Sumw2()
 pteta2.Sumw2()
 pteta3.Sumw2()
 
-MtbbptcomparepreSB1e1    = TH2F("MtbbptcomparepreSB1e1",  "Comparison bpt and Mtb",   		400,0,2000,  140,  500,  4000 )
-MtbbptcomparepostSB1e1    = TH2F("MtbbptcomparepostSB1e1",  "Comparison bpt and Mtb",   		400,0,2000,  140,  500,  4000 )
+MtbwptcomparepreSB1e1    = TH2F("MtbwptcomparepreSB1e1",  "Comparison wpt and Mtb",   		400,0,2000,  140,  500,  4000 )
+MtbwptcomparepostSB1e1    = TH2F("MtbwptcomparepostSB1e1",  "Comparison wpt and Mtb",   		400,0,2000,  140,  500,  4000 )
 
-MtbbptcomparepreSB1e1.Sumw2()
-MtbbptcomparepostSB1e1.Sumw2()
+MtbwptcomparepreSB1e1.Sumw2()
+MtbwptcomparepostSB1e1.Sumw2()
 
-MtbbptcomparepreSB1e2    = TH2F("MtbbptcomparepreSB1e2",  "Comparison bpt and Mtb",   		400,0,2000,  140,  500,  4000 )
-MtbbptcomparepostSB1e2    = TH2F("MtbbptcomparepostSB1e2",  "Comparison bpt and Mtb",   		400,0,2000,  140,  500,  4000 )
+MtbwptcomparepreSB1e2    = TH2F("MtbwptcomparepreSB1e2",  "Comparison wpt and Mtb",   		400,0,2000,  140,  500,  4000 )
+MtbwptcomparepostSB1e2    = TH2F("MtbwptcomparepostSB1e2",  "Comparison wpt and Mtb",   		400,0,2000,  140,  500,  4000 )
 
-MtbbptcomparepreSB1e2.Sumw2()
-MtbbptcomparepostSB1e2.Sumw2()
+MtbwptcomparepreSB1e2.Sumw2()
+MtbwptcomparepostSB1e2.Sumw2()
 
-MtbbptcomparepreSB1e3    = TH2F("MtbbptcomparepreSB1e3",  "Comparison bpt and Mtb",   		400,0,2000,  140,  500,  4000 )
-MtbbptcomparepostSB1e3    = TH2F("MtbbptcomparepostSB1e3",  "Comparison bpt and Mtb",   		400,0,2000,  140,  500,  4000 )
-
-MtbbptcomparepreSB1e3.Sumw2()
-MtbbptcomparepostSB1e3.Sumw2()
 
 
 
@@ -276,14 +279,12 @@ count = 0
 jobiter = 0
 print "Start looping"
 #initialize the ttree variables
-tree_vars = {"bpt":array('d',[0.]),"bmass":array('d',[0.]),"btag":array('d',[0.]),"tpt":array('d',[0.]),"tmass":array('d',[0.]),"nsubjets":array('d',[0.]),"sjbtag":array('d',[0.])}
+tree_vars = {"wpt":array('d',[0.]),"wmass":array('d',[0.]),"btag":array('d',[0.]),"tpt":array('d',[0.]),"tmass":array('d',[0.]),"nsubjets":array('d',[0.]),"sjbtag":array('d',[0.])}
 Tree = Make_Trees(tree_vars)
 totevents = events.size()
 print str(totevents)  +  ' Events total'
 for event in events:
     count	= 	count + 1
-    weightSFb = 1.0
-    errorSFb = 0.0
 
     #Uncomment for a low count test run
     #if count > 300000:
@@ -303,10 +304,10 @@ for event in events:
 	
     #We load up the relevant handles and labels and create collections
     event.getByLabel (hemis1prCA8Label, hemis1prCA8Handle)
-    bJetsh1 		= 	hemis1prCA8Handle.product()
+    wJetsh1 		= 	hemis1prCA8Handle.product()
 
     event.getByLabel (hemis0prCA8Label, hemis0prCA8Handle)
-    bJetsh0 		= 	hemis0prCA8Handle.product()
+    wJetsh0 		= 	hemis0prCA8Handle.product()
     
     event.getByLabel (hemis1topLabel, hemis1topHandle)
     topJetsh1 		= 	hemis1topHandle.product()
@@ -321,11 +322,11 @@ for event in events:
 
     #Require 1 pt>150 jet in each hemisphere (top jets already have the 150GeV requirement) 
 
-    for bjet in bJetsh0:
-	if bjet.pt() > 150.0:
+    for wjet in wJetsh0:
+	if wjet.pt() > 150.0:
 		bjh0+=1
-    for bjet in bJetsh1:
-	if bjet.pt() > 150.0:
+    for wjet in wJetsh1:
+	if wjet.pt() > 150.0:
 		bjh1+=1
 
     njets11b0 	= 	((len(topJetsh1) == 1) and (bjh0 == 1))
@@ -337,7 +338,7 @@ for event in events:
 			continue 
 		#The Ntuple entries are ordered in pt, so [0] is the highest pt entry
 		#We are calling a candidate b jet (highest pt jet in hemisphere0)  
-		bjet = bJetsh0[0]
+		wjet = wJetsh0[0]
 		BDiscLabel = hemis0BDiscLabel
 		BDiscHandle = hemis0BDiscHandle
 
@@ -361,7 +362,7 @@ for event in events:
     	if hemis == 'hemis1'  :
 		if not njets11b1:
 			continue 
-		bjet = bJetsh1[0]
+		wjet = wJetsh1[0]
 		BDiscLabel = hemis1BDiscLabel
 		BDiscHandle = hemis1BDiscHandle
 
@@ -381,17 +382,17 @@ for event in events:
     		TopBDiscsj3CSVLabel = hemis0TopBDiscsj3CSVLabel
 		TopBDiscsj3CSVHandle = hemis0TopBDiscsj3CSVHandle
 
-	if abs(bjet.eta())>2.40 or abs(tjet.eta())>2.40:
+	if abs(wjet.eta())>2.40 or abs(tjet.eta())>2.40:
 		continue
 
     	weight=1.0
 	#Cuts are loaded from the Wprime_Functions.py file
-	#here bpt[0] is 370 and bpt[1] is inf, so we are making sure the b pt is at least 370 GeV
-    	bpt_cut = bpt[0]<bjet.pt()<bpt[1]
+	#here wpt[0] is 370 and wpt[1] is inf, so we are making sure the b pt is at least 370 GeV
+    	wpt_cut = wpt[0]<wjet.pt()<wpt[1]
     	tpt_cut = tpt[0]<tjet.pt()<tpt[1]
-    	dy_cut = dy[0]<=abs(tjet.Rapidity()-bjet.Rapidity())<dy[1]
+    	dy_cut = dy[0]<=abs(tjet.Rapidity()-wjet.Rapidity())<dy[1]
     	#We first perform the top and b candidate pt cuts and the deltaY cut
-    	if bpt_cut and tpt_cut and dy_cut: 
+    	if wpt_cut and tpt_cut and dy_cut: 
 		if options.set!="data":
 			#Pileup reweighting is done here 
 			event.getByLabel (puLabel, puHandle)
@@ -400,7 +401,7 @@ for event in events:
 			weight *= PilePlot.GetBinContent(bin1)
 			if run_b_SF :
 				#btagging scale factor reweighting done here
-				SFB = SFB_Lookup( bjet.pt() )
+				SFB = SFB_Lookup( wjet.pt() )
 				weightSFb = SFB[0]
 				errorSFb = SFB[1]
 
@@ -413,12 +414,9 @@ for event in events:
 		tmass_cut = tmass[0]<topJetMass[0]<tmass[1]
 		nsubjets_cut = nsubjets[0]<=NSubJets[0]<nsubjets[1]
 		#Now we start top-tagging.  In this file, we use a sideband based on inverting some top-tagging requirements
-        	if tmass_cut and nsubjets_cut :
-                	event.getByLabel (BDiscLabel, BDiscHandle)
-                	bJetBDisc 	= 	BDiscHandle.product()
-                	btag_cut = btag[0]<bJetBDisc[0]<=btag[1]
-
-			ht = tjet.pt() + bjet.pt()
+		if tmass_cut:
+			minmass_cut = minmass[0]<=topJetMinMass[0]<minmass[1]
+			ht = tjet.pt() + wjet.pt()
 			if options.trigger != "none" :
 				#Trigger reweighting done here
 				TRW = Trigger_Lookup( ht , TrigPlot , options.trigger )
@@ -451,35 +449,71 @@ for event in events:
     			event.getByLabel (TopBDiscsj3CSVLabel, TopBDiscsj3CSVHandle)
     			Topsj3BDiscCSV 		= 	TopBDiscsj3CSVHandle.product() 
 
+
+
+
+
+
+
+    			event.getByLabel (CA8Label, CA8Handle)
+    			CA8Jets 		= 	CA8Handle.product() 
+	
+
+    			event.getByLabel (TopTau3Label, TopTau3Handle)
+    			Tau3		= 	TopTau3Handle.product() 
+
+
+    			event.getByLabel (TopTau2Label, TopTau2Handle)
+    			Tau2		= 	TopTau2Handle.product() 
+		
+    			event.getByLabel (TopTau3Label, TopTau3Handle)
+    			Tau1		= 	TopTau1Handle.product() 
+
+			index = -1
+
+			for ijet in range(0,len(CA8Jets)):
+				if (abs(ROOT.Math.VectorUtil.DeltaR(CA8Jets[ijet],wjet))<0.5):
+					index = ijet
+					break
+
+			tau21_cut =  tau21[0]<=Tau2[index]/Tau1[index]<tau21[1]
+
+
+
+			index = -1
+			for ijet in range(0,len(CA8Jets)):
+				if (abs(ROOT.Math.VectorUtil.DeltaR(CA8Jets[ijet],tjet))<0.5):
+					index = ijet
+					break
+
+
+			tau32_cut =  tau32[0]<=Tau3[index]/Tau2[index]<tau32[1]
+
+
 			SJ_csvmax = max(Topsj0BDiscCSV[0],Topsj1BDiscCSV[0],Topsj2BDiscCSV[0],Topsj3BDiscCSV[0])
 			sjbtag_cut = sjbtag[0]<SJ_csvmax<=sjbtag[1]
-			if sjbtag_cut:
-				bmass_cut = bmass[0]<=bjet.mass()<bmass[1]
-				if bmass_cut:
-					eta1_cut = eta1[0]<=abs(bjet.eta())<eta1[1]
-					eta2_cut = eta2[0]<=abs(bjet.eta())<eta2[1]
-					eta3_cut = eta3[0]<=abs(bjet.eta())<eta3[1]
+			wmass_cut = wmass[0][0]<=wjet.mass()<wmass[0][1] or wmass[1][0]<=wjet.mass()<wmass[1][1] 
+			FullTop = sjbtag_cut and tau32_cut and nsubjets_cut and minmass_cut
+			if wmass_cut:
+				if tau21_cut:
+					eta1_cut = eta1[0]<=abs(wjet.eta())<eta1[1]
+					eta2_cut = eta2[0]<=abs(wjet.eta())<eta2[1]
 					#Extract tags and probes for the average b tagging rate here 
 					#We use three eta regions 
 					if eta1_cut:
-						MtbbptcomparepreSB1e1.Fill(bjet.pt(),(tjet+bjet).mass(),weight)
-                				pteta1pretag.Fill( bjet.pt(),weight)
-                				if btag_cut :
-							MtbbptcomparepostSB1e1.Fill(bjet.pt(),(tjet+bjet).mass(),weightb)
-                					pteta1.Fill( bjet.pt(),weightb)
+						MtbwptcomparepreSB1e1.Fill(wjet.pt(),(tjet+wjet).mass(),weight)
+                				pteta1pretag.Fill( wjet.pt(),weight)
+                				if FullTop :
+							MtbwptcomparepostSB1e1.Fill(wjet.pt(),(tjet+wjet).mass(),weightb)
+                					pteta1.Fill( wjet.pt(),weightb)
 					if eta2_cut:
-						MtbbptcomparepreSB1e2.Fill(bjet.pt(),(tjet+bjet).mass(),weight)
-                				pteta2pretag.Fill( bjet.pt(),weight)
-                				if btag_cut :
-							MtbbptcomparepostSB1e2.Fill(bjet.pt(),(tjet+bjet).mass(),weightb)
-                					pteta2.Fill( bjet.pt(),weightb)
-					if eta3_cut:
-						MtbbptcomparepreSB1e3.Fill(bjet.pt(),(tjet+bjet).mass(),weight)
-                				pteta3pretag.Fill( bjet.pt(),weight)
-                				if btag_cut :
-							MtbbptcomparepostSB1e3.Fill(bjet.pt(),(tjet+bjet).mass(),weightb)
-                					pteta3.Fill( bjet.pt(),weightb)
-					temp_variables = {"bpt":bjet.pt(),"bmass":bjet.mass(),"btag":bJetBDisc[0],"tpt":tjet.pt(),"tmass":topJetMass[0],"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax}
+						MtbwptcomparepreSB1e2.Fill(wjet.pt(),(tjet+wjet).mass(),weight)
+                				pteta2pretag.Fill( wjet.pt(),weight)
+                				if FullTop :
+							MtbwptcomparepostSB1e2.Fill(wjet.pt(),(tjet+wjet).mass(),weightb)
+                					pteta2.Fill( wjet.pt(),weightb)
+				
+					temp_variables = {"wpt":wjet.pt(),"wmass":wjet.mass(),"tpt":tjet.pt(),"tmass":topJetMass[0],"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax}
 
 					for tv in tree_vars.keys():
 						tree_vars[tv][0] = temp_variables[tv]
