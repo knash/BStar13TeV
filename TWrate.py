@@ -114,7 +114,6 @@ if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
 	settype = 'ttbar'
 elif (options.set.find('QCD') != -1):
 	settype ='QCD'
-	run_b_SF = False
 else :
 	settype = options.set.replace('right','').replace('left','')
 
@@ -255,17 +254,17 @@ pteta1.Sumw2()
 pteta2.Sumw2()
 pteta3.Sumw2()
 
-MtbwptcomparepreSB1e1    = TH2F("MtbwptcomparepreSB1e1",  "Comparison wpt and Mtb",   		400,0,2000,  140,  500,  4000 )
-MtbwptcomparepostSB1e1    = TH2F("MtbwptcomparepostSB1e1",  "Comparison wpt and Mtb",   		400,0,2000,  140,  500,  4000 )
+MtwwptcomparepreSB1e1    = TH2F("MtwwptcomparepreSB1e1",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
+MtwwptcomparepostSB1e1    = TH2F("MtwwptcomparepostSB1e1",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
 
-MtbwptcomparepreSB1e1.Sumw2()
-MtbwptcomparepostSB1e1.Sumw2()
+MtwwptcomparepreSB1e1.Sumw2()
+MtwwptcomparepostSB1e1.Sumw2()
 
-MtbwptcomparepreSB1e2    = TH2F("MtbwptcomparepreSB1e2",  "Comparison wpt and Mtb",   		400,0,2000,  140,  500,  4000 )
-MtbwptcomparepostSB1e2    = TH2F("MtbwptcomparepostSB1e2",  "Comparison wpt and Mtb",   		400,0,2000,  140,  500,  4000 )
+MtwwptcomparepreSB1e2    = TH2F("MtwwptcomparepreSB1e2",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
+MtwwptcomparepostSB1e2    = TH2F("MtwwptcomparepostSB1e2",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
 
-MtbwptcomparepreSB1e2.Sumw2()
-MtbwptcomparepostSB1e2.Sumw2()
+MtwwptcomparepreSB1e2.Sumw2()
+MtwwptcomparepostSB1e2.Sumw2()
 
 
 
@@ -279,7 +278,9 @@ count = 0
 jobiter = 0
 print "Start looping"
 #initialize the ttree variables
-tree_vars = {"wpt":array('d',[0.]),"wmass":array('d',[0.]),"btag":array('d',[0.]),"tpt":array('d',[0.]),"tmass":array('d',[0.]),"nsubjets":array('d',[0.]),"sjbtag":array('d',[0.])}
+tree_vars = {"wpt":array('d',[0.]),"wmass":array('d',[0.]),"btag":array('d',[0.]),"tpt":array('d',[0.]),"tmass":array('d',[0.]),"tau32":array('d',[0.]),"tau21":array('d',[0.]),"nsubjets":array('d',[0.]),"sjbtag":array('d',[0.]),"weight":array('d',[0.])}
+
+
 Tree = Make_Trees(tree_vars)
 totevents = events.size()
 print str(totevents)  +  ' Events total'
@@ -399,11 +400,6 @@ for event in events:
     			PileUp 		= 	puHandle.product()
                 	bin1 = PilePlot.FindBin(PileUp[0]) 
 			weight *= PilePlot.GetBinContent(bin1)
-			if run_b_SF :
-				#btagging scale factor reweighting done here
-				SFB = SFB_Lookup( wjet.pt() )
-				weightSFb = SFB[0]
-				errorSFb = SFB[1]
 
         	event.getByLabel (TopMassLabel, TopMassHandle)
         	topJetMass 	= 	TopMassHandle.product()
@@ -430,11 +426,6 @@ for event in events:
 				GenParticles = GenHandle.product()
 				PTW = PTW_Lookup( GenParticles )
 				weight*=PTW
-
-			weightb=weight*weightSFb
-			weightSFbup=weight*(weightSFb+errorSFb)
-			weightSFbdown=weight*(weightSFb-errorSFb)
-
 
 
     			event.getByLabel (TopBDiscsj0CSVLabel, TopBDiscsj0CSVHandle)
@@ -496,25 +487,24 @@ for event in events:
 			FullTop = sjbtag_cut and tau32_cut and nsubjets_cut and minmass_cut
 			if wmass_cut:
 				if tau21_cut:
-					eta1_cut = eta1[0]<=abs(wjet.eta())<eta1[1]
-					eta2_cut = eta2[0]<=abs(wjet.eta())<eta2[1]
+					eta1_cut = eta1[0]<=abs(tjet.eta())<eta1[1]
+					eta2_cut = eta2[0]<=abs(tjet.eta())<eta2[1]
 					#Extract tags and probes for the average b tagging rate here 
 					#We use three eta regions 
 					if eta1_cut:
-						MtbwptcomparepreSB1e1.Fill(wjet.pt(),(tjet+wjet).mass(),weight)
-                				pteta1pretag.Fill( wjet.pt(),weight)
+						MtwwptcomparepreSB1e1.Fill(tjet.pt(),(tjet+wjet).mass(),weight)
+                				pteta1pretag.Fill( tjet.pt(),weight)
                 				if FullTop :
-							MtbwptcomparepostSB1e1.Fill(wjet.pt(),(tjet+wjet).mass(),weightb)
-                					pteta1.Fill( wjet.pt(),weightb)
+							MtwwptcomparepostSB1e1.Fill(tjet.pt(),(tjet+wjet).mass(),weight)
+                					pteta1.Fill( tjet.pt(),weight)
 					if eta2_cut:
-						MtbwptcomparepreSB1e2.Fill(wjet.pt(),(tjet+wjet).mass(),weight)
-                				pteta2pretag.Fill( wjet.pt(),weight)
+						MtwwptcomparepreSB1e2.Fill(tjet.pt(),(tjet+wjet).mass(),weight)
+                				pteta2pretag.Fill( tjet.pt(),weight)
                 				if FullTop :
-							MtbwptcomparepostSB1e2.Fill(wjet.pt(),(tjet+wjet).mass(),weightb)
-                					pteta2.Fill( wjet.pt(),weightb)
+							MtwwptcomparepostSB1e2.Fill(tjet.pt(),(tjet+wjet).mass(),weight)
+                					pteta2.Fill( tjet.pt(),weight)
 				
-					temp_variables = {"wpt":wjet.pt(),"wmass":wjet.mass(),"tpt":tjet.pt(),"tmass":topJetMass[0],"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax}
-
+					temp_variables = {"wpt":wjet.pt(),"wmass":wjet.mass(),"tpt":tjet.pt(),"tmass":topJetMass[0],"tau32":tau32,"tau21":tau21,,"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax,"weight":weight}
 					for tv in tree_vars.keys():
 						tree_vars[tv][0] = temp_variables[tv]
 					Tree.Fill()

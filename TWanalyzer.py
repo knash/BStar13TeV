@@ -147,7 +147,6 @@ if options.pileup=='off':
 	pustr = "_pileup_unweighted"
 
 
-run_b_SF = True
 #Based on what set we want to analyze, we find all Ntuple root files 
 
 files = Load_Ntuples(options.set)
@@ -290,12 +289,12 @@ else:
 	f = TFile( "TBanalyzer"+options.set+"_Trigger_"+options.trigger+"_"+options.modulesuffix +pustr+pstr+"_PSET_"+options.cuts+".root", "recreate" )
 
 #Load up the average b-tagging rates -- Takes parameters from text file and makes a function
-BTR = BTR_Init('Bifpoly','rate_'+options.cuts,di)
-BTR_err = BTR_Init('Bifpoly_err','rate_'+options.cuts,di)
+TTR = TTR_Init('Bifpoly','rate_'+options.cuts,di)
+TTR_err = TTR_Init('Bifpoly_err','rate_'+options.cuts,di)
 fittitles = ["pol0","pol2","pol3","FIT","Bifpoly","expofit"]
 fits = []
 for fittitle in fittitles:
-	fits.append(BTR_Init(fittitle,'rate_'+options.cuts,di))
+	fits.append(TTR_Init(fittitle,'rate_'+options.cuts,di))
 
 print "Creating histograms"
 
@@ -337,7 +336,7 @@ count = 0
 jobiter = 0
 print "Start looping"
 #initialize the ttree variables
-tree_vars = {"wpt":array('d',[0.]),"wmass":array('d',[0.]),"tpt":array('d',[0.]),"tmass":array('d',[0.]),"nsubjets":array('d',[0.]),"sjbtag":array('d',[0.])}
+tree_vars = {"wpt":array('d',[0.]),"wmass":array('d',[0.]),"tpt":array('d',[0.]),"tmass":array('d',[0.]),"tau32":array('d',[0.]),"tau21":array('d',[0.]),"nsubjets":array('d',[0.]),"sjbtag":array('d',[0.]),"weight":array('d',[0.])}
 Tree = Make_Trees(tree_vars)
 
 goodEvents = []
@@ -386,12 +385,12 @@ for event in events:
 	if wjet.pt() > 150.0:
 		wjh1+=1
 
-    njets11b0 	= 	((len(topJetsh1) == 1) and (wjh0 == 1))
-    njets11b1 	= 	((len(topJetsh0) == 1) and (wjh1 == 1))
+    njets11w0 	= 	((len(topJetsh1) == 1) and (wjh0 == 1))
+    njets11w1 	= 	((len(topJetsh0) == 1) and (wjh1 == 1))
 
     for hemis in ['hemis0','hemis1']:
     	if hemis == 'hemis0'   :
-		if not njets11b0:
+		if not njets11w0:
 			continue 
 		#The Ntuple entries are ordered in pt, so [0] is the highest pt entry
 		#We are calling a candidate b jet (highest pt jet in hemisphere0)  
@@ -419,7 +418,7 @@ for event in events:
 
 
     	if hemis == 'hemis1'  :
-		if not njets11b1:
+		if not njets11w1:
 			continue 
 		wjet = wJetsh1[0]
 		BDiscLabel = hemis1BDiscLabel
@@ -535,9 +534,9 @@ for event in events:
 				if (abs(ROOT.Math.VectorUtil.DeltaR(CA8Jets[ijet],wjet))<0.5):
 					index = ijet
 					break
-
-			tau21_cut =  tau21[0]<=Tau2[index]/Tau1[index]<tau21[1]
-
+			tau21=Tau2[index]/Tau1[index]
+			tau21_cut =  tau21[0]<=tau21<tau21[1]
+			
 
 
 
@@ -547,8 +546,8 @@ for event in events:
 				if (abs(ROOT.Math.VectorUtil.DeltaR(CA8Jets[ijet],tjet))<0.5):
 					index = ijet
 					break
-
-			tau32_cut =  tau32[0]<=Tau3[index]/Tau2[index]<tau32[1]
+			tau32 =  Tau3[index]/Tau2[index]
+			tau32_cut =  tau32[0]<=tau32<tau32[1]
 
 			wmass_cut = wmass[0]<=wjet.mass()<wmass[1]
 
@@ -556,16 +555,16 @@ for event in events:
 
 			if wmass_cut:
 					if tau21_cut:
-							eta_regions = [eta1,eta2,eta3]
-							BTRweight = bkg_weight(wjet,BTR,eta_regions)
-							BTRweightsigsq = bkg_weight(wjet,BTR_err,eta_regions)
+							eta_regions = [eta1,eta2]
+							TTRweight = bkg_weight(tjet,TTR,eta_regions)
+							TTRweightsigsq = bkg_weight(tjet,TTR_err,eta_regions)
 
-							BTRweighterrup = BTRweight+sqrt(BTRweightsigsq)
-							BTRweighterrdown = BTRweight-sqrt(BTRweightsigsq)
+							TTRweighterrup = TTRweight+sqrt(TTRweightsigsq)
+							TTRweighterrdown = TTRweight-sqrt(TTRweightsigsq)
 
 
-							eta1_cut = eta1[0]<=abs(wjet.eta())<eta1[1]
-							eta2_cut = eta2[0]<=abs(wjet.eta())<eta2[1]
+							eta1_cut = eta1[0]<=abs(tjet.eta())<eta1[1]
+							eta2_cut = eta2[0]<=abs(tjet.eta())<eta2[1]
 
 							modm = topJetsh1[0].mass()
 							if options.modmass=='nominal':
@@ -578,13 +577,13 @@ for event in events:
 
 
 							if (eta1_cut) :
-								xbin = TagPlot2de1.GetXaxis().FindBin(wjet.pt())
+								xbin = TagPlot2de1.GetXaxis().FindBin(tjet.pt())
 								ybin = TagPlot2de1.GetYaxis().FindBin((tjet+wjet).mass())
 								tagrate2d = TagPlot2de1.GetBinContent(xbin,ybin)
 								QCDbkg2D.Fill((tjet+wjet).mass(),tagrate2d*weight*massw)
 			
 							if (eta2_cut):
-								xbin = TagPlot2de2.GetXaxis().FindBin(wjet.pt())
+								xbin = TagPlot2de2.GetXaxis().FindBin(tjet.pt())
 								ybin = TagPlot2de2.GetYaxis().FindBin((tjet+wjet).mass())
 								tagrate2d = TagPlot2de2.GetBinContent(xbin,ybin)
 								QCDbkg2D.Fill((tjet+wjet).mass(),tagrate2d*weight*massw)
@@ -592,17 +591,17 @@ for event in events:
 				
 
 							for ifit in range(0,len(fittitles)):
-									tempweight = bkg_weight(wjet,fits[ifit],eta_regions)
-									QCDbkg_ARR[ifit].Fill((tjet+wjet).mass(),tempweight*weight*massw) 
+									tempweight = bkg_weight(tjet,fits[ifit],eta_regions)
+									QCDbkg_ARR[ifit].Fill((tjet+tjet).mass(),tempweight*weight*massw) 
 
-							QCDbkg.Fill((tjet+wjet).mass(),BTRweight*weight*massw)
-							QCDbkgh.Fill((tjet+wjet).mass(),BTRweighterrup*weight*massw)
-							QCDbkgl.Fill((tjet+wjet).mass(),BTRweighterrdown*weight*massw)  
+							QCDbkg.Fill((tjet+wjet).mass(),TTRweight*weight*massw)
+							QCDbkgh.Fill((tjet+wjet).mass(),TTRweighterrup*weight*massw)
+							QCDbkgl.Fill((tjet+wjet).mass(),TTRweighterrdown*weight*massw)  
         				        	if FullTop:
                                       				goodEvents.append( [ event.object().id().run(), event.object().id().luminosityBlock(), event.object().id().event() ] )
 								Mtb.Fill((tjet+wjet).mass(),weight) 
 				
-								temp_variables = {"wpt":wjet.pt(),"wmass":wjet.mass(),"tpt":tjet.pt(),"tmass":topJetMass[0],"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax}
+								temp_variables = {"wpt":wjet.pt(),"wmass":wjet.mass(),"tpt":tjet.pt(),"tmass":topJetMass[0],"tau32":tau32,"tau21":tau21,"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax,"weight":weight}
 
 								for tv in tree_vars.keys():
 									tree_vars[tv][0] = temp_variables[tv]
