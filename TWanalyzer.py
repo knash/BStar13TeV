@@ -2,15 +2,15 @@
 
 ###################################################################
 ##								 ##
-## Name: TBanalyzer.py	   			                 ##
+## Name: TWanalyzer.py	   			                 ##
 ## Author: Kevin Nash 						 ##
 ## Date: 6/5/2012						 ##
 ## Purpose: This program performs the main analysis.  		 ##
 ##	    It takes the tagrates created by  	 		 ##
-##          TBrate_Maker.py stored in fitdata, and uses 	 ##
+##          TWrate_Maker.py stored in fitdata, and uses 	 ##
 ##          them to weigh pre b tagged samples to create a 	 ##
 ##	    QCD background estimate along with the full event    ##
-##	    selection to product Mtb inputs to Theta		 ##
+##	    selection to product Mtw inputs to Theta		 ##
 ##								 ##
 ###################################################################
 
@@ -101,10 +101,10 @@ if options.grid == 'on':
 	di = "tardir/"
 	sys.path.insert(0, 'tardir/')
 
+gROOT.Macro(di+"rootlogon.C")
 
-
-import Wprime_Functions	
-from Wprime_Functions import *
+import Bstar_Functions	
+from Bstar_Functions import *
 
 #Load up cut values based on what selection we want to run 
 Cuts = LoadCuts(options.cuts)
@@ -114,7 +114,7 @@ dy = Cuts['dy']
 tmass = Cuts['tmass']
 nsubjets = Cuts['nsubjets']
 tau32 = Cuts['tau32']
-tau32 = Cuts['tau21']
+tau21 = Cuts['tau21']
 minmass = Cuts['minmass']
 sjbtag = Cuts['sjbtag']
 wmass = Cuts['wmass']
@@ -136,6 +136,12 @@ else:
 mod = "ttbsmAna"
 if options.modulesuffix != "none" :
 	mod = mod + options.modulesuffix
+
+mmstr = ""
+if options.modmass!="nominal":
+	print "using modm uncertainty"
+	mmstr = "_modm_"+options.modmass
+
 
 pstr = ""
 if options.pdfweights!="nominal":
@@ -284,9 +290,9 @@ GenLabel = ( "prunedGenParticles", "" )
 #---------------------------------------------------------------------------------------------------------------------#
 
 if jobs != 1:
-	f = TFile( "TBanalyzer"+options.set+"_Trigger_"+options.trigger+"_"+options.modulesuffix +pustr+pstr+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+".root", "recreate" )
+	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+options.trigger+"_"+options.modulesuffix +pustr+pstr+mmstr+"_job"+options.num+"of"+options.jobs+"_PSET_"+options.cuts+".root", "recreate" )
 else:
-	f = TFile( "TBanalyzer"+options.set+"_Trigger_"+options.trigger+"_"+options.modulesuffix +pustr+pstr+"_PSET_"+options.cuts+".root", "recreate" )
+	f = TFile( "TWanalyzer"+options.set+"_Trigger_"+options.trigger+"_"+options.modulesuffix +pustr+pstr+mmstr+"_PSET_"+options.cuts+".root", "recreate" )
 
 #Load up the average b-tagging rates -- Takes parameters from text file and makes a function
 TTR = TTR_Init('Bifpoly','rate_'+options.cuts,di)
@@ -307,15 +313,15 @@ TagPlot2de2= TagFile1.Get("tagrateeta2")
 
 f.cd()
 #---------------------------------------------------------------------------------------------------------------------#
-Mtb	    = TH1F("Mtb",     "mass of tb",     	  	      140, 500, 4000 )
+Mtw	    = TH1F("Mtw",     "mass of tw",     	  	      140, 500, 4000 )
 
 QCDbkg= TH1F("QCDbkg",     "QCD background estimate",     	  	      140, 500, 4000 )
 QCDbkgh= TH1F("QCDbkgh",     "QCD background estimate up error",     	  	      140, 500, 4000 )
 QCDbkgl= TH1F("QCDbkgl",     "QCD background estimate down error",     	  	      140, 500, 4000 )
 QCDbkg2D= TH1F("QCDbkg2D",     "QCD background estimate 2d error",     	  	      140, 500, 4000 )
-
-
-Mtb.Sumw2()
+QCDbkg2Dup= TH1F("QCDbkg2Dup",     "QCD background estimate 2d error",     	  	      140, 500, 4000 )
+QCDbkg2Ddown= TH1F("QCDbkg2Ddown",     "QCD background estimate 2d error",     	  	      140, 500, 4000 )
+Mtw.Sumw2()
 
 QCDbkg.Sumw2()
 QCDbkgh.Sumw2()
@@ -387,7 +393,7 @@ for event in events:
 
     njets11w0 	= 	((len(topJetsh1) == 1) and (wjh0 == 1))
     njets11w1 	= 	((len(topJetsh0) == 1) and (wjh1 == 1))
-
+    tag = 0
     for hemis in ['hemis0','hemis1']:
     	if hemis == 'hemis0'   :
 		if not njets11w0:
@@ -395,9 +401,6 @@ for event in events:
 		#The Ntuple entries are ordered in pt, so [0] is the highest pt entry
 		#We are calling a candidate b jet (highest pt jet in hemisphere0)  
 		wjet = wJetsh0[0]
-
-		BDiscLabel = hemis0BDiscLabel
-		BDiscHandle = hemis0BDiscHandle
 
 		tjet = topJetsh1[0]
 
@@ -441,6 +444,7 @@ for event in events:
 		TopBDiscsj3CSVHandle = hemis0TopBDiscsj3CSVHandle
 
 	if abs(wjet.eta())>2.40 or abs(tjet.eta())>2.40:
+		print "High Eta Event"
 		continue
 
     	weight=1.0
@@ -525,7 +529,7 @@ for event in events:
     			event.getByLabel (TopTau3Label, TopTau3Handle)
     			Tau3		= 	TopTau3Handle.product() 
 
-    			event.getByLabel (TopTau3Label, TopTau3Handle)
+    			event.getByLabel (TopTau1Label, TopTau1Handle)
     			Tau1		= 	TopTau1Handle.product() 
 
 			index = -1
@@ -534,8 +538,8 @@ for event in events:
 				if (abs(ROOT.Math.VectorUtil.DeltaR(CA8Jets[ijet],wjet))<0.5):
 					index = ijet
 					break
-			tau21=Tau2[index]/Tau1[index]
-			tau21_cut =  tau21[0]<=tau21<tau21[1]
+			tau21val=Tau2[index]/Tau1[index]
+			tau21_cut =  tau21[0]<=tau21val<tau21[1]
 			
 
 
@@ -546,8 +550,8 @@ for event in events:
 				if (abs(ROOT.Math.VectorUtil.DeltaR(CA8Jets[ijet],tjet))<0.5):
 					index = ijet
 					break
-			tau32 =  Tau3[index]/Tau2[index]
-			tau32_cut =  tau32[0]<=tau32<tau32[1]
+			tau32val =  Tau3[index]/Tau2[index]
+			tau32_cut =  tau32[0]<=tau32val<tau32[1]
 
 			wmass_cut = wmass[0]<=wjet.mass()<wmass[1]
 
@@ -580,16 +584,20 @@ for event in events:
 								xbin = TagPlot2de1.GetXaxis().FindBin(tjet.pt())
 								ybin = TagPlot2de1.GetYaxis().FindBin((tjet+wjet).mass())
 								tagrate2d = TagPlot2de1.GetBinContent(xbin,ybin)
+								tagrate2derr = TagPlot2de1.GetBinError(xbin,ybin)
 								QCDbkg2D.Fill((tjet+wjet).mass(),tagrate2d*weight*massw)
+								QCDbkg2Dup.Fill((tjet+wjet).mass(),(tagrate2d+tagrate2derr)*weight*massw)
+								QCDbkg2Ddown.Fill((tjet+wjet).mass(),(tagrate2d-tagrate2derr)*weight*massw)	
 			
 							if (eta2_cut):
 								xbin = TagPlot2de2.GetXaxis().FindBin(tjet.pt())
 								ybin = TagPlot2de2.GetYaxis().FindBin((tjet+wjet).mass())
 								tagrate2d = TagPlot2de2.GetBinContent(xbin,ybin)
+								tagrate2derr = TagPlot2de2.GetBinError(xbin,ybin)
 								QCDbkg2D.Fill((tjet+wjet).mass(),tagrate2d*weight*massw)
-
-				
-
+								QCDbkg2Dup.Fill((tjet+wjet).mass(),(tagrate2d+tagrate2derr)*weight*massw)
+								QCDbkg2Ddown.Fill((tjet+wjet).mass(),(tagrate2d-tagrate2derr)*weight*massw)	
+			
 							for ifit in range(0,len(fittitles)):
 									tempweight = bkg_weight(tjet,fits[ifit],eta_regions)
 									QCDbkg_ARR[ifit].Fill((tjet+tjet).mass(),tempweight*weight*massw) 
@@ -597,15 +605,16 @@ for event in events:
 							QCDbkg.Fill((tjet+wjet).mass(),TTRweight*weight*massw)
 							QCDbkgh.Fill((tjet+wjet).mass(),TTRweighterrup*weight*massw)
 							QCDbkgl.Fill((tjet+wjet).mass(),TTRweighterrdown*weight*massw)  
-        				        	if FullTop:
+        				        	if FullTop and tag==0:
                                       				goodEvents.append( [ event.object().id().run(), event.object().id().luminosityBlock(), event.object().id().event() ] )
-								Mtb.Fill((tjet+wjet).mass(),weight) 
-				
-								temp_variables = {"wpt":wjet.pt(),"wmass":wjet.mass(),"tpt":tjet.pt(),"tmass":topJetMass[0],"tau32":tau32,"tau21":tau21,"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax,"weight":weight}
+								Mtw.Fill((tjet+wjet).mass(),weight) 
+								tag=1
+								temp_variables = {"wpt":wjet.pt(),"wmass":wjet.mass(),"tpt":tjet.pt(),"tmass":topJetMass[0],"tau32":tau32val,"tau21":tau21val,"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax,"weight":weight}
 
 								for tv in tree_vars.keys():
 									tree_vars[tv][0] = temp_variables[tv]
 								Tree.Fill()
+	
 
 
 f.cd()

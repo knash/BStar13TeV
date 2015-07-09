@@ -34,41 +34,43 @@ python ./tardir/TWanalyzer.py -s singletop_tB -t nominal -g on
 python ./tardir/TWanalyzer.py -s singletop_tW -t nominal -g on
 python ./tardir/TWanalyzer.py -s singletop_tWB -t nominal -g on
 
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal -x up -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal -x off -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t up -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t down -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal -m ScaleUp -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal -m ScaleDown -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal -m PtSmearUp -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal -m PtSmearDown -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal -m EtaSmearUp -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal -m EtaSmearDown -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal  -p up -z MSTW2008nnlo68cl -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal  -p down -z MSTW2008nnlo68cl -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal  -p up -z NNPDF23 -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal  -p down -z NNPDF23 -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal  -p up -z CT10 -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalright -t nominal  -p down -z CT10 -g on'
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-x_up_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-x_off_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_up_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_down_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-m_ScaleUp_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-m_ScaleDown_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-m_PtSmearUp_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-m_PtSmearDown_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-m_EtaSmearUp_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-m_EtaSmearDown_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal__-p_up_-z_MSTW2008nnlo68cl_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal__-p_down_-z_MSTW2008nnlo68cl_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal__-p_up_-z_NNPDF23_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal__-p_down_-z_NNPDF23_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal__-p_up_-z_CT10_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal__-p_down_-z_CT10_-g_on
 
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal -x up -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal -x off -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t up -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t down -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal -m ScaleUp -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal -m ScaleDown -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal -m PtSmearUp -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal -m PtSmearDown -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal -m EtaSmearUp -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal -m EtaSmearDown -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal  -p up -z MSTW2008nnlo68cl -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal  -p down -z MSTW2008nnlo68cl -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal  -p up -z NNPDF23 -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal  -p down -z NNPDF23 -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal  -p up -z CT10 -g on'
-python ./tardir/TWsequencer.py -c 'python ./tardir/TWanalyzer.py -s signalleft -t nominal  -p down -z CT10 -g on'
+
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-x_up_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-x_off_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_up_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_down_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-m_ScaleUp_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-m_ScaleDown_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-m_PtSmearUp_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-m_PtSmearDown_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-m_EtaSmearUp_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-m_EtaSmearDown_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal__-p_up_-z_MSTW2008nnlo68cl_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal__-p_down_-z_MSTW2008nnlo68cl_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal__-p_up_-z_NNPDF23_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal__-p_down_-z_NNPDF23_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal__-p_up_-z_CT10_-g_on
+python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal__-p_down_-z_CT10_-g_on
+
 
 python ./tardir/TWanalyzer.py -s ttbar700 -t up -g on
 python ./tardir/TWanalyzer.py -s ttbar700 -t down -g on
@@ -104,4 +106,6 @@ python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -p up -z NNPDF23 -g on
 python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -p down -z NNPDF23 -g on
 python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -p up -z MSTW2008nnlo68cl -g on
 python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -p down -z MSTW2008nnlo68cl -g on
+
+
 

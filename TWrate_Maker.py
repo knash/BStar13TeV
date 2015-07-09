@@ -43,8 +43,8 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
 
 gROOT.Macro("rootlogon.C")
 
-import Wprime_Functions	
-from Wprime_Functions import *
+import Bstar_Functions	
+from Bstar_Functions import *
 
 rootdir="rootfiles/"
 
@@ -193,9 +193,7 @@ for ifile in range(0,len(SigFiles)):
 	dseta2r = dseta2.Rebin(len(bins2)-1,"dseta2r",bins2)
 
 
-	print "pretag signal at "+str(mass[ifile])+"$\GeV$ & " +strf1(dseta1.Integral()) + " ($"+ strf(100*dseta1.Integral()/dtot1) + "\%$) & " + strf1(dseta2.Integral()) + " ($"+ strf(100*dseta2.Integral()/dtot2) + "\%$) & " + strf1(dseta3.Integral()) + " ($"+ strf(100*dseta3.Integral()/dtot3) + "\%$)"
-	print "tagged signal at "+str(mass[ifile])+"$\GeV$ & " +strf1(nseta1.Integral()) + " ($"+ strf(100*nseta1.Integral()/ntot1) + "\%$) & " + strf1(nseta2.Integral()) + " ($"+ strf(100*nseta2.Integral()/ntot2) + "\%$) & " + strf1(nseta3.Integral()) + " ($"+ strf(100*nseta3.Integral()/ntot3) + "\%$)"
-
+	
 	nseta1r.Add(neta1r)
 	dseta1r.Add(deta1r)
 
@@ -307,7 +305,7 @@ print "------------------------------------"
 
 # This is the fit we use.  BIFP is the bifurcation point
 
-BIFP=500.0
+BIFP=570.0
 BP =TF1("BP",BifPoly,370,1400,5)
 BP.FixParameter(4,BIFP)
 
@@ -352,11 +350,11 @@ print(BIFP)
 
 
 tagrateeta1.Draw()
-c4.Print("plots/BPTAGETA1FIT"+setstr+".root","root")
+c4.Print("plots/WPTAGETA1FIT"+setstr+".root","root")
 c3 = TCanvas('c3', 'Tagrate2', 1300, 600)
 c3.cd()
 
-BIFP=500.0
+BIFP=660.0
 BP =TF1("BP",BifPoly,370,1400,5)
 BP.FixParameter(4,BIFP)
 tagrateeta2.Fit("BP","F")
@@ -393,7 +391,7 @@ print str(p03)
 print str(p13)
 print(BIFP)
 tagrateeta2.Draw()
-c3.Print("plots/BPTAGETA2FIT"+setstr+".root","root")
+c3.Print("plots/WPTAGETA2FIT"+setstr+".root","root")
 c2 = TCanvas('c2', 'Tagrate3', 1300, 600)
 c2.cd()
 #fixbin = tagrateeta3.FindBin(BIFP)
@@ -647,17 +645,8 @@ print str(p22)
 print str(p23)
 print str(p33)
 
-sys.stdout = Outf12
-tagrateeta3.Fit("FIT","F")
-fitter = TVirtualFitter.GetFitter()
-print(fitter.GetParameter(0))
-print(fitter.GetParameter(1))
-print(fitter.GetParameter(2))
-print(fitter.GetParameter(3))
 
-
-
-#The rest of this file makes the 3d mistag rates (parameterized in pt,eta,mtb)
+#The rest of this file makes the 3d mistag rates (parameterized in pt,eta,Mtw)
 
 
 
@@ -677,18 +666,18 @@ dpre1=[]
 dpre2=[]	
 
 
-neta1NOSUB = fdata.Get("MtbbptcomparepostSB1e1")
-deta1NOSUB = fdata.Get("MtbbptcomparepreSB1e1")
+neta1NOSUB = fdata.Get("MtwwptcomparepostSB1e1")
+deta1NOSUB = fdata.Get("MtwwptcomparepreSB1e1")
 
-neta2NOSUB = fdata.Get("MtbbptcomparepostSB1e2")
-deta2NOSUB = fdata.Get("MtbbptcomparepreSB1e2")
+neta2NOSUB = fdata.Get("MtwwptcomparepostSB1e2")
+deta2NOSUB = fdata.Get("MtwwptcomparepreSB1e2")
 
 
-neta1ttbar = fttbar.Get("MtbbptcomparepostSB1e1")
-deta1ttbar = fttbar.Get("MtbbptcomparepreSB1e1")
+neta1ttbar = fttbar.Get("MtwwptcomparepostSB1e1")
+deta1ttbar = fttbar.Get("MtwwptcomparepreSB1e1")
 
-neta2ttbar = fttbar.Get("MtbbptcomparepostSB1e2")
-deta2ttbar = fttbar.Get("MtbbptcomparepreSB1e2")
+neta2ttbar = fttbar.Get("MtwwptcomparepostSB1e2")
+deta2ttbar = fttbar.Get("MtwwptcomparepreSB1e2")
 
 
 neta1 = neta1NOSUB.Clone("neta1")
@@ -712,11 +701,11 @@ vavg1 = []
 vavg2 = []
 
 
-neta1r = ROOT.TH2F("neta1r",  "Comparison bpt and Mtb",   		len(bins2)-1, bins2,  140,  500,  4000 )
-deta1r = ROOT.TH2F("deta1r",  "Comparison bpt and Mtb",   		len(bins2)-1, bins2,  140,  500,  4000 )
+neta1r = ROOT.TH2F("neta1r",  "Comparison wpt and Mtw",   		len(bins2)-1, bins2,  140,  500,  4000 )
+deta1r = ROOT.TH2F("deta1r",  "Comparison wpt and Mtw",   		len(bins2)-1, bins2,  140,  500,  4000 )
 
-neta2r = ROOT.TH2F("neta2r",  "Comparison bpt and Mtb",   		len(bins2)-1, bins2,  140,  500,  4000 )
-deta2r  = ROOT.TH2F("deta2r",  "Comparison bpt and Mtb",   		len(bins2)-1, bins2,  140,  500,  4000 )
+neta2r = ROOT.TH2F("neta2r",  "Comparison wpt and Mtw",   		len(bins2)-1, bins2,  140,  500,  4000 )
+deta2r  = ROOT.TH2F("deta2r",  "Comparison wpt and Mtw",   		len(bins2)-1, bins2,  140,  500,  4000 )
 
 
 for ibin in range(0,len(bins2)-1):
@@ -787,21 +776,7 @@ for ibin in range(0,len(bins2)-1):
 		tempbin3 = 0
 		error3 = ROOT.Double(1.0)
 
-		binning3= array('d',[])
-		int3 = pre3[ibin].Integral()
-		binning3.append(500.0)
-		for ibin3 in range(1,pre3[ibin].GetNbinsX()-1):
-			cont = pre3[ibin].IntegralAndError(tempbin3+1,ibin3,error3)
-			if cont > 0.0:
-				if not fcont:
-					tempbin3 = ibin3
-					binning3.append(pre1[ibin].GetBinLowEdge(tempbin3))
-					fcont = True
-				if error3*int3/(cont*cont) < bres:
-					tempbin3 = ibin3
-					binning3.append(pre3[ibin].GetBinLowEdge(tempbin3) + pre3[ibin].GetBinWidth(tempbin3))
-		binning3.append(4000.0)
-
+		
 
 
 		pre1[ibin] = pre1[ibin].Rebin(len(binning1)-1,"SB1projYeta1_"+str(bins2[ibin])+"_to_"+str(bins2[ibin+1]),binning1)
@@ -821,6 +796,13 @@ for ibin in range(0,len(bins2)-1):
 
 			neta2r.SetBinContent(ibin+1,ibin1,pre2[ibin].GetBinContent(bin1de2))
 			deta2r.SetBinContent(ibin+1,ibin1,dpre2[ibin].GetBinContent(bin1de2))
+
+
+			neta1r.SetBinError(ibin+1,ibin1,pre1[ibin].GetBinError(bin1de1))
+			deta1r.SetBinError(ibin+1,ibin1,dpre1[ibin].GetBinError(bin1de1))
+
+			neta2r.SetBinError(ibin+1,ibin1,pre2[ibin].GetBinError(bin1de2))
+			deta2r.SetBinError(ibin+1,ibin1,dpre2[ibin].GetBinError(bin1de2))
 
 		pre1[ibin].Divide(pre1[ibin],dpre1[ibin],1,1,"B")
 		pre2[ibin].Divide(pre2[ibin],dpre2[ibin],1,1,"B")
@@ -893,7 +875,7 @@ c3 = TCanvas('c3SB1', 'Pt fitted tagrate in 1.15 < Eta <2.4', 800, 500)
 
 print vavg1
 print vavg2
-print vavg3
+
 output1.cd()
 tagrateeta1.Write()
 tagrateeta2.Write()

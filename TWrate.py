@@ -61,7 +61,7 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
 
 (options, args) = parser.parse_args()
 
-gROOT.Macro("rootlogon.C")
+
 
 print "Options summary"
 print "=================="
@@ -77,9 +77,9 @@ if options.grid == 'on':
 	di = "tardir/"
 	sys.path.insert(0, 'tardir/')
 
-
-import Wprime_Functions	
-from Wprime_Functions import *
+gROOT.Macro(di+"rootlogon.C")
+import Bstar_Functions	
+from Bstar_Functions import *
 
 #Load up cut values based on what selection we want to run 
 Cuts = LoadCuts(options.cuts)
@@ -248,11 +248,11 @@ pteta2          = TH1D("pteta2",           "b pt in 1.0<Eta<2.4",             40
 
 pteta1pretag.Sumw2()
 pteta2pretag.Sumw2()
-pteta3pretag.Sumw2()
+
 
 pteta1.Sumw2()
 pteta2.Sumw2()
-pteta3.Sumw2()
+
 
 MtwwptcomparepreSB1e1    = TH2F("MtwwptcomparepreSB1e1",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
 MtwwptcomparepostSB1e1    = TH2F("MtwwptcomparepostSB1e1",  "Comparison wpt and Mtw",   		400,0,2000,  140,  500,  4000 )
@@ -278,7 +278,7 @@ count = 0
 jobiter = 0
 print "Start looping"
 #initialize the ttree variables
-tree_vars = {"wpt":array('d',[0.]),"wmass":array('d',[0.]),"btag":array('d',[0.]),"tpt":array('d',[0.]),"tmass":array('d',[0.]),"tau32":array('d',[0.]),"tau21":array('d',[0.]),"nsubjets":array('d',[0.]),"sjbtag":array('d',[0.]),"weight":array('d',[0.])}
+tree_vars = {"wpt":array('d',[0.]),"wmass":array('d',[0.]),"tpt":array('d',[0.]),"tmass":array('d',[0.]),"tau32":array('d',[0.]),"tau21":array('d',[0.]),"nsubjets":array('d',[0.]),"sjbtag":array('d',[0.]),"weight":array('d',[0.])}
 
 
 Tree = Make_Trees(tree_vars)
@@ -287,8 +287,8 @@ print str(totevents)  +  ' Events total'
 for event in events:
     count	= 	count + 1
 
-    #Uncomment for a low count test run
-    #if count > 300000:
+   # Uncomment for a low count test run
+    #if count > 5000:
 	#break
 
     if count % 100000 == 0 :
@@ -340,8 +340,6 @@ for event in events:
 		#The Ntuple entries are ordered in pt, so [0] is the highest pt entry
 		#We are calling a candidate b jet (highest pt jet in hemisphere0)  
 		wjet = wJetsh0[0]
-		BDiscLabel = hemis0BDiscLabel
-		BDiscHandle = hemis0BDiscHandle
 
 		tjet = topJetsh1[0]
         	TopMassLabel = hemis1TopMassLabel
@@ -364,8 +362,6 @@ for event in events:
 		if not njets11b1:
 			continue 
 		wjet = wJetsh1[0]
-		BDiscLabel = hemis1BDiscLabel
-		BDiscHandle = hemis1BDiscHandle
 
 		tjet = topJetsh0[0]
         	TopMassLabel = hemis0TopMassLabel
@@ -387,7 +383,7 @@ for event in events:
 		continue
 
     	weight=1.0
-	#Cuts are loaded from the Wprime_Functions.py file
+	#Cuts are loaded from the Bstar_Functions.py file
 	#here wpt[0] is 370 and wpt[1] is inf, so we are making sure the b pt is at least 370 GeV
     	wpt_cut = wpt[0]<wjet.pt()<wpt[1]
     	tpt_cut = tpt[0]<tjet.pt()<tpt[1]
@@ -457,7 +453,7 @@ for event in events:
     			event.getByLabel (TopTau2Label, TopTau2Handle)
     			Tau2		= 	TopTau2Handle.product() 
 		
-    			event.getByLabel (TopTau3Label, TopTau3Handle)
+    			event.getByLabel (TopTau1Label, TopTau1Handle)
     			Tau1		= 	TopTau1Handle.product() 
 
 			index = -1
@@ -467,8 +463,8 @@ for event in events:
 					index = ijet
 					break
 
-			tau21_cut =  tau21[0]<=Tau2[index]/Tau1[index]<tau21[1]
-
+			tau21val=Tau2[index]/Tau1[index]
+			tau21_cut =  tau21[0]<=tau21val<tau21[1]
 
 
 			index = -1
@@ -478,8 +474,9 @@ for event in events:
 					break
 
 
-			tau32_cut =  tau32[0]<=Tau3[index]/Tau2[index]<tau32[1]
 
+			tau32val =  Tau3[index]/Tau2[index]
+			tau32_cut =  tau32[0]<=tau32val<tau32[1]
 
 			SJ_csvmax = max(Topsj0BDiscCSV[0],Topsj1BDiscCSV[0],Topsj2BDiscCSV[0],Topsj3BDiscCSV[0])
 			sjbtag_cut = sjbtag[0]<SJ_csvmax<=sjbtag[1]
@@ -504,7 +501,7 @@ for event in events:
 							MtwwptcomparepostSB1e2.Fill(tjet.pt(),(tjet+wjet).mass(),weight)
                 					pteta2.Fill( tjet.pt(),weight)
 				
-					temp_variables = {"wpt":wjet.pt(),"wmass":wjet.mass(),"tpt":tjet.pt(),"tmass":topJetMass[0],"tau32":tau32,"tau21":tau21,,"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax,"weight":weight}
+					temp_variables = {"wpt":wjet.pt(),"wmass":wjet.mass(),"tpt":tjet.pt(),"tmass":topJetMass[0],"tau32":tau32val,"tau21":tau21val,"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax,"weight":weight}
 					for tv in tree_vars.keys():
 						tree_vars[tv][0] = temp_variables[tv]
 					Tree.Fill()

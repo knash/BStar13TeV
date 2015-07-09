@@ -1,18 +1,1 @@
-python ./tardir/TWrate.py -s ttbar700 -t nominal -u on -g on
-python ./tardir/TWrate.py -s ttbar1000 -t nominal -u on  -g on
-python ./tardir/TWrate.py -s data -n 1 -j 8 -g on
-python ./tardir/TWrate.py -s data -n 2 -j 8 -g on
-python ./tardir/TWrate.py -s data -n 3 -j 8 -g on
-python ./tardir/TWrate.py -s data -n 4 -j 8 -g on
-python ./tardir/TWrate.py -s data -n 5 -j 8 -g on
-python ./tardir/TWrate.py -s data -n 6 -j 8 -g on
-python ./tardir/TWrate.py -s data -n 7 -j 8 -g on
-python ./tardir/TWrate.py -s data -n 8 -j 8 -g on
-
-python ./tardir/TWrate.py -s signalright800 -t nominal -g on
-python ./tardir/TWrate.py -s signalright1000 -t nominal -g on
-python ./tardir/TWrate.py -s signalright1200 -t nominal -g on
-python ./tardir/TWrate.py -s signalright1400 -t nominal -g on
-python ./tardir/TWrate.py -s signalright1600 -t nominal -g on
-python ./tardir/TWrate.py -s signalright1800 -t nominal -g on
-python ./tardir/TWrate.py -s signalright2000 -t nominal -g on
+python ./tardir/TWsequencer.py -c python_./tardir/TWrate.py_-s_signalright_-t_nominal_-g_on

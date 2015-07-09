@@ -20,26 +20,23 @@ parser.add_option('-c', '--cuts', metavar='F', type='string', action='store',
 
 cuts = options.cuts
 
-import Wprime_Functions	
-from Wprime_Functions import *
+import Bstar_Functions	
+from Bstar_Functions import *
 
 #Load up cut values based on what selection we want to run 
 Cons = LoadConstants()
 lumi = Cons['lumi']
 ttagsf = Cons['ttagsf']
-xsec_wpr = Cons['xsec_wpr']
-xsec_wpl = Cons['xsec_wpl']
-xsec_wplr = Cons['xsec_wplr']
+wtagsf = Cons['wtagsf']
+xsec_bsr = Cons['xsec_bsr']
 xsec_ttbar = Cons['xsec_ttbar']
 xsec_qcd = Cons['xsec_qcd']
 xsec_st = Cons['xsec_st']
-nev_wpr = Cons['nev_wpr']
-nev_wpl = Cons['nev_wpl']
-nev_wplr = Cons['nev_wplr']
+nev_bsr = Cons['nev_bsr']
+nev_bsl = Cons['nev_bsl']
 nev_ttbar = Cons['nev_ttbar']
 nev_qcd = Cons['nev_qcd']
 nev_st = Cons['nev_st']
-
 
 files = sorted(glob.glob("*job*of*.root"))
 
@@ -59,7 +56,7 @@ for f in files_to_sum:
 	commands.append('mv ' +  f.replace('_PSET','_job*_PSET') + ' temprootfiles/')
 	commands.append('mv ' +  f + ' rootfiles/')
 
-ttbarfiles = sorted(glob.glob('TBanalyzerttbar700*_PSET_'+cuts+'.root'))
+ttbarfiles = sorted(glob.glob('TWanalyzerttbar700*_PSET_'+cuts+'.root'))
 for f in ttbarfiles:
 	basename = f.replace('700','')
 	name700 = f
@@ -73,45 +70,41 @@ for f in ttbarfiles:
 		scalestr = 'scaledown'
 
 	commands.append('rm ' + basename)
-	commands.append('python HistoWeight.py -i '+name700+' -o temprootfiles/'+name700.replace('.root','')+'weighted.root -w ' + str(lumi*xsec_ttbar['700']*ttagsf/nev_ttbar['700'+scalestr]))
-	commands.append('python HistoWeight.py -i '+name1000+' -o temprootfiles/'+name1000.replace('.root','')+'weighted.root -w ' + str(lumi*xsec_ttbar['1000']*ttagsf/nev_ttbar['1000'+scalestr]))
+	commands.append('python HistoWeight.py -i '+name700+' -o temprootfiles/'+name700.replace('.root','')+'weighted.root -w ' + str(lumi*xsec_ttbar['700']*ttagsf*wtagsf/nev_ttbar['700'+scalestr]))
+	commands.append('python HistoWeight.py -i '+name1000+' -o temprootfiles/'+name1000.replace('.root','')+'weighted.root -w ' + str(lumi*xsec_ttbar['1000']*ttagsf*wtagsf/nev_ttbar['1000'+scalestr]))
 	commands.append('hadd '+basename+' temprootfiles/'+name700.replace('.root','')+'weighted.root temprootfiles/'+name1000.replace('.root','')+'weighted.root')
 	commands.append('mv ' + name700 + ' ' + name1000 + ' temprootfiles/')
 	commands.append('mv ' + basename + ' rootfiles/')
 
 
-for coup in ['right','left','mixed']:
-	sigfiles = sorted(glob.glob('TBanalyzersignal'+coup+'*_PSET_'+cuts+'.root'))
+for coup in ['right','left']:
+	sigfiles = sorted(glob.glob('TWanalyzersignal'+coup+'*_PSET_'+cuts+'.root'))
 	for f in sigfiles:
-		mass = f.replace('TBanalyzersignal'+coup,'')[:4]
-		
+		mass = f.replace('TWanalyzersignal'+coup,'')[:4].replace("_","")
+		xsec_sig = xsec_bsr[mass]
 		if coup =='right':
-			xsec_sig = xsec_wpr[mass]
-			nev_sig = nev_wpr[mass]
+			nev_sig = nev_bsr[mass]
 		if coup =='left':
-			xsec_sig = xsec_wpl[mass]
-			nev_sig = nev_wpl[mass]
-		if coup =='mixed':
-			xsec_sig = xsec_wplr[mass]
-			nev_sig = nev_wplr[mass]
-		commands.append('rm ' + f.replace('TBanalyzersignal'+coup,'TBanalyzerweightedsignal'+coup))	 
-		commands.append('python HistoWeight.py -i '+f+' -o '+f.replace('TBanalyzersignal'+coup,'TBanalyzerweightedsignal'+coup)+' -w ' + str(lumi*xsec_sig*ttagsf/nev_sig))
+			nev_sig = nev_bsl[mass]
+	
+		commands.append('rm ' + f.replace('TWanalyzersignal'+coup,'TWanalyzerweightedsignal'+coup))	 
+		commands.append('python HistoWeight.py -i '+f+' -o '+f.replace('TWanalyzersignal'+coup,'TWanalyzerweightedsignal'+coup)+' -w ' + str(lumi*xsec_sig*ttagsf*wtagsf/nev_sig))
 		commands.append('mv '+f+' temprootfiles/')
-		commands.append('mv '+f.replace('TBanalyzersignal'+coup,'TBanalyzerweightedsignal'+coup)+' rootfiles/')
+		commands.append('mv '+f.replace('TWanalyzersignal'+coup,'TWanalyzerweightedsignal'+coup)+' rootfiles/')
 
 
-stfiles = sorted(glob.glob('TBanalyzersingletop_*_Trigger_nominal_none_PSET_'+cuts+'.root'))
+stfiles = sorted(glob.glob('TWanalyzersingletop_*_Trigger_nominal_none_PSET_'+cuts+'.root'))
 
 for f in stfiles:
 	print f
-	channel = f.replace('TBanalyzersingletop_','').replace('_Trigger_nominal_none_PSET_'+cuts+'.root','')
+	channel = f.replace('TWanalyzersingletop_','').replace('_Trigger_nominal_none_PSET_'+cuts+'.root','')
 	print channel
 	xsec_ST = xsec_st[channel]
 	nev_ST = nev_st[channel]
-	commands.append('rm ' + f.replace('TBanalyzersingletop_','TBanalyzerweightedsingletop_'))	 
-	commands.append('python HistoWeight.py -i '+f+' -o '+f.replace('TBanalyzersingletop_','TBanalyzerweightedsingletop_')+' -w ' + str(lumi*xsec_ST*ttagsf/nev_ST))
+	commands.append('rm ' + f.replace('TWanalyzersingletop_','TWanalyzerweightedsingletop_'))	 
+	commands.append('python HistoWeight.py -i '+f+' -o '+f.replace('TWanalyzersingletop_','TWanalyzerweightedsingletop_')+' -w ' + str(lumi*xsec_ST*ttagsf*wtagsf/nev_ST))
 	commands.append('mv '+f+' temprootfiles/')
-	commands.append('mv '+f.replace('TBanalyzersingletop_','TBanalyzerweightedsingletop_')+' rootfiles/')
+	commands.append('mv '+f.replace('TWanalyzersingletop_','TWanalyzerweightedsingletop_')+' rootfiles/')
 
 
 

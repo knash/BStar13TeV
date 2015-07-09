@@ -60,7 +60,7 @@ def LoadCuts(TYPE):
 			'sjbtag':[0.679,1.0],
 			'wmass':[70.0,100.0],
 			'eta1':[0.0,1.0],
-			'eta3':[1.0,2.4]
+			'eta2':[1.0,2.4]
 			}
 	if TYPE=='rate_default':
  		return  {
@@ -75,7 +75,7 @@ def LoadCuts(TYPE):
 			'sjbtag':[0.679,1.0],
 			'wmass':[[30.0,70.0],[100,float("inf")]],
 			'eta1':[0.0,1.0],	
-			'eta3':[1.0,2.4]
+			'eta2':[1.0,2.4]
 			}
 
 #This function loads up Ntuples based on what type of set you want to analyze.  
@@ -143,29 +143,29 @@ def Load_Ntuples(string):
 
 
 	if string == 'signalleft800':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-800_left/res/*.root" )
+		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-800/res/*.root" )
 	if string == 'signalleft900':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-900_left/res/*.root" )
+		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-900/res/*.root" )
 	if string == 'signalleft1000':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1000_left/res/*.root" )
+		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1000/res/*.root" )
 	if string == 'signalleft1100':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1100_left/res/*.root" )
+		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1100/res/*.root" )
 	if string == 'signalleft1200':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1200_left/res/*.root" )
+		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1200/res/*.root" )
 	if string == 'signalleft1300':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1300_left/res/*.root" )
+		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1300/res/*.root" )
 	if string == 'signalleft1400':
 		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1400/res/*.root" )
 	if string == 'signalleft1500':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1500_left/res/*.root" )
+		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1500/res/*.root" )
 	if string == 'signalleft1600':
 		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1600/res/*.root" )
 	if string == 'signalleft1700':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1700_left/res/*.root" )
+		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1700/res/*.root" )
 	if string == 'signalleft1800':
 		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1800/res/*.root" )
 	if string == 'signalleft1900':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1900_left/res/*.root" )
+		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1900/res/*.root" )
 	if string == 'signalleft2000':
 		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-2000/res/*.root" )
 
@@ -173,6 +173,7 @@ def Load_Ntuples(string):
 		print 'A total of ' + str(len(files)) + ' files'
 	except:
 		print 'Bad files option'
+		files = []
 	return files
 
 

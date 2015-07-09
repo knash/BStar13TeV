@@ -21,8 +21,8 @@ parser.add_option('-c', '--command', metavar='F', type='string', action='store',
 sigpoints = ['800','900','1000','1100','1200','1300','1400','1500','1600','1700','1800','1900','2000']
 
 for j in sigpoints:
-    	print 'executing ' + options.command.replace('signalright','signalright'+j).replace('signalleft','signalleft'+j)
-    	subprocess.call( [options.command.replace('signalright','signalright'+j).replace('signalleft','signalleft'+j)], shell=True )
+    	print 'executing ' + options.command.replace('signalright','signalright'+j).replace('signalleft','signalleft'+j).replace('_',' ')
+    	subprocess.call( [options.command.replace('signalright','signalright'+j).replace('signalleft','signalleft'+j).replace('_',' ')], shell=True )
 
 
 
