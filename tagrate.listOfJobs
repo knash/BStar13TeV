@@ -1,1 +1,14 @@
 python ./tardir/TWsequencer.py -c python_./tardir/TWrate.py_-s_signalright_-t_nominal_-g_on
+
+python ./tardir/TWrate.py -n 1 -j 8 -g on
+python ./tardir/TWrate.py -n 2 -j 8 -g on
+python ./tardir/TWrate.py -n 3 -j 8 -g on
+python ./tardir/TWrate.py -n 4 -j 8 -g on
+python ./tardir/TWrate.py -n 5 -j 8 -g on
+python ./tardir/TWrate.py -n 6 -j 8 -g on
+python ./tardir/TWrate.py -n 7 -j 8 -g ona
+python ./tardir/TWrate.py -n 8 -j 8 -g on
+
+python ./tardir/TWrate.py -s ttbar700 -t nominal -g on
+python ./tardir/TWrate.py -s ttbar1000 -t nominal -g on
+
