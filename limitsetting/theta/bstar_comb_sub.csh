@@ -63,19 +63,19 @@ sed -i 's/RSIG/Vector/g' analysis_bsvector_dilep.py
 
 
 
-python grid_submit_theta.py --file=analysis_bsright_Combination.py --crabfile=crab3ThetaGridbscomb.py --uidir=analysis_bstar_right_comb
-python grid_submit_theta.py --file=analysis_bsright_AllHad.py --crabfile=crab3ThetaGridbscomb.py --uidir=analysis_bstar_right_had
-python grid_submit_theta.py --file=analysis_bsright_Semilep.py --crabfile=crab3ThetaGridbscomb.py --uidir=analysis_bstar_right_semilep
-python grid_submit_theta.py --file=analysis_bsright_dilep.py --crabfile=crab3ThetaGridbscomb.py --uidir=analysis_bstar_right_dilep
+python grid_submit_theta.py --file=analysis_bsright_Combination.py --uidir=analysis_bstar_right_comb
+python grid_submit_theta.py --file=analysis_bsright_AllHad.py --uidir=analysis_bstar_right_had
+python grid_submit_theta.py --file=analysis_bsright_Semilep.py --uidir=analysis_bstar_right_semilep
+python grid_submit_theta.py --file=analysis_bsright_dilep.py --uidir=analysis_bstar_right_dilep
 
-python grid_submit_theta.py --file=analysis_bsleft_Combination.py --crabfile=crab3ThetaGridbscomb.py --uidir=analysis_bstar_left_comb
-python grid_submit_theta.py --file=analysis_bsleft_AllHad.py --crabfile=crab3ThetaGridbscomb.py --uidir=analysis_bstar_left_had
-python grid_submit_theta.py --file=analysis_bsleft_Semilep.py --crabfile=crab3ThetaGridbscomb.py --uidir=analysis_bstar_left_semilep
-python grid_submit_theta.py --file=analysis_bsleft_dilep.py --crabfile=crab3ThetaGridbscomb.py --uidir=analysis_bstar_left_dilep
+python grid_submit_theta.py --file=analysis_bsleft_Combination.py --uidir=analysis_bstar_left_comb
+python grid_submit_theta.py --file=analysis_bsleft_AllHad.py --uidir=analysis_bstar_left_had
+python grid_submit_theta.py --file=analysis_bsleft_Semilep.py --uidir=analysis_bstar_left_semilep
+python grid_submit_theta.py --file=analysis_bsleft_dilep.py --uidir=analysis_bstar_left_dilep
 
-python grid_submit_theta.py --file=analysis_bsvector_Combination.py --crabfile=crab3ThetaGridbscomb.py --uidir=analysis_bstar_vector_comb
-python grid_submit_theta.py --file=analysis_bsvector_AllHad.py --crabfile=crab3ThetaGridbscomb.py --uidir=analysis_bstar_vector_had
-python grid_submit_theta.py --file=analysis_bsvector_Semilep.py --crabfile=crab3ThetaGridbscomb.py --uidir=analysis_bstar_vector_semilep
-python grid_submit_theta.py --file=analysis_bsvector_dilep.py --crabfile=crab3ThetaGridbscomb.py --uidir=analysis_bstar_vector_dilep
+python grid_submit_theta.py --file=analysis_bsvector_Combination.py --uidir=analysis_bstar_vector_comb
+python grid_submit_theta.py --file=analysis_bsvector_AllHad.py --uidir=analysis_bstar_vector_had
+python grid_submit_theta.py --file=analysis_bsvector_Semilep.py --uidir=analysis_bstar_vector_semilep
+python grid_submit_theta.py --file=analysis_bsvector_dilep.py --uidir=analysis_bstar_vector_dilep
 
 

@@ -16,12 +16,6 @@ parser.add_option('--file', metavar='F', type='string', action='store',
                   help='analysis file')
 
 
-parser.add_option('--crabfile', metavar='F', type='string', action='store',
-                  dest='crabfile',
-                  default='',
-                  help='crab file')
-
-
 parser.add_option('--uidir', metavar='F', type='string', action='store',
                   dest='uidir',
                   default=None,
