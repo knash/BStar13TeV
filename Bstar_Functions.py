@@ -1,7 +1,7 @@
 
 ###################################################################
 ##								 ##
-## Name: WPrime_Functions.py	   			         ##
+## Name: Bstar_Functions.py	   			         ##
 ## Author: Kevin Nash 						 ##
 ## Date: 5/13/2015						 ##
 ## Purpose: This contains all functions used by the              ##
