@@ -25,19 +25,20 @@ from Bstar_Functions import *
 
 #Load up cut values based on what selection we want to run 
 Cons = LoadConstants()
-
 lumi = Cons['lumi']
 ttagsf = Cons['ttagsf']
 xsec_bsr = Cons['xsec_bsr']
+xsec_bsl = Cons['xsec_bsl']
+xsec_bslr = Cons['xsec_bslr']
 xsec_ttbar = Cons['xsec_ttbar']
 xsec_qcd = Cons['xsec_qcd']
 xsec_st = Cons['xsec_st']
 nev_bsr = Cons['nev_bsr']
 nev_bsl = Cons['nev_bsl']
+nev_bslr = Cons['nev_bslr']
 nev_ttbar = Cons['nev_ttbar']
 nev_qcd = Cons['nev_qcd']
 nev_st = Cons['nev_st']
-
 
 files = sorted(glob.glob("*job*of*.root"))
 
@@ -55,13 +56,25 @@ for f in files_to_sum:
 	commands.append('rm '+f) 
 	commands.append('hadd ' + f + " " + f.replace('_PSET','_job*_PSET') )
 	commands.append('mv ' +  f.replace('_PSET','_job*_PSET') + ' temprootfiles/')
-	commands.append('mv ' +  f + ' rootfiles/')
-commands.append('rm TWratefilettbar_PSET_'+cuts+'.root')
-commands.append('python HistoWeight.py -i TWratefilettbar700_PSET_'+cuts+'.root -o temprootfiles/TWratefilettbar700_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_ttbar['700']/nev_ttbar['700']))
-commands.append('python HistoWeight.py -i TWratefilettbar1000_PSET_'+cuts+'.root -o temprootfiles/TWratefilettbar1000_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_ttbar['1000']/nev_ttbar['1000']))
-commands.append('hadd TWratefilettbar_PSET_'+cuts+'.root temprootfiles/TWratefilettbar700_PSET_'+cuts+'weighted.root temprootfiles/TWratefilettbar1000_PSET_'+cuts+'weighted.root')
-commands.append('mv TWratefilettbar700_PSET_'+cuts+'.root TWratefilettbar1000_PSET_'+cuts+'.root temprootfiles/')
-commands.append('mv TWratefilettbar_PSET_'+cuts+'.root rootfiles/')
+#	commands.append('mv ' +  f + ' rootfiles/')
+
+commands.append('rm rootfiles/TWratefileweightedttbar_PSET_'+cuts+'.root')
+commands.append('python HistoWeight.py -i TWratefilettbar_PSET_'+cuts+'.root -o TWratefileweightedttbar_PSET_'+cuts+'.root -w ' + str(lumi*xsec_ttbar['MG']/nev_ttbar['MG']))
+commands.append('mv TWratefileweightedttbar_PSET_'+cuts+'.root rootfiles/')
+commands.append('mv TWratefilettbar_PSET_'+cuts+'.root temprootfiles/')
+
+commands.append('rm rootfiles/TWratefileQCD_PSET_rate_default.root')
+commands.append('python HistoWeight.py -i TWratefileQCDPT300_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCDPT300_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['300']/nev_qcd['300']))
+commands.append('python HistoWeight.py -i TWratefileQCDPT470_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCDPT470_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['470']/nev_qcd['470']))
+commands.append('python HistoWeight.py -i TWratefileQCDPT600_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCDPT600_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['600']/nev_qcd['600']))
+commands.append('python HistoWeight.py -i TWratefileQCDPT800_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCDPT800_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['800']/nev_qcd['800']))
+commands.append('python HistoWeight.py -i TWratefileQCDPT1000_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCDPT1000_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['1000']/nev_qcd['1000']))
+commands.append('python HistoWeight.py -i TWratefileQCDPT1400_PSET_'+cuts+'.root -o temprootfiles/TWratefileQCDPT1400_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['1400']/nev_qcd['1400']))
+commands.append('hadd TWratefileQCD_PSET_'+cuts+'.root temprootfiles/TWratefileQCDPT*_PSET_'+cuts+'weighted.root')
+commands.append('mv TWratefileQCDPT*_PSET_'+cuts+'.root temprootfiles/')
+commands.append('mv TWratefileQCD_PSET_'+cuts+'.root rootfiles/')
+
+
 for coup in ['right','left','mixed']:
 	sigfiles = sorted(glob.glob('TWratefilesignal'+coup+'*_PSET_'+cuts+'.root'))
 	for f in sigfiles:
