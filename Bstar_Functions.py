@@ -20,27 +20,29 @@ import os
 import array
 import glob
 import math
+from math import sqrt
 import ROOT
 import sys
+import cppyy
 from array import *
 from ROOT import *
-
+from DataFormats.FWLite import Events, Handle
 #This is the most impostant Function.  Correct information here is essential to obtaining valid results.
 #In order we have Luminosity, top tagging scale factor, cross sections for wprime right,left,mixed,ttbar,qcd, and singletop and their corresponding event numbers
 #If I wanted to access the left handed W' cross section at 1900 GeV I could do Xsecl1900 = LoadConstants()['xsec_wpl']['1900']
 def LoadConstants():
 	 return  {
-		'lumi':19757,
-		'ttagsf':1.036,
-		'wtagsf':0.86,
+		'lumi':4000,
+		'ttagsf':1.0,
+		'wtagsf':1.0,
 		'xsec_bsr':{'800': 1.362,'900': 0.662,'1000': 0.336,'1100':0.178 ,'1200':0.0966 ,'1300': 0.0540,'1400': 0.0310,'1500': 0.0181,'1600': 0.0108,'1700': 0.00652,'1800': 0.00399,'1900': 0.00249,'2000': 0.00156},
-		'xsec_ttbar':{'700':245.8*0.79*0.074,'1000':245.8*0.79*0.014},
-		'xsec_qcd':{'300':1759.6,'470':113.9,'600':27.0,'800':3.57,'1000':0.734,'1400':0.03352235},
+		'xsec_ttbar':{'MG':806.0},
+ 		'xsec_qcd':{'300':7823,'470':648.2,'600':186.9,'800':32.293,'1000':9.4183,'1400':0.84265,'800_BROKEN':32.293,'FLAT7000':2022100000},
 		'xsec_st':{'s':3.79,'sB':1.76,'t':56.4,'tB':30.7,'tW':11.1,'tWB':11.1},
 		'nev_bsr':{'800':197491,'900':197117 ,'1000':196569 ,'1100':195855,'1200':195455 ,'1300':194988 ,'1400':194177 ,'1500':193291 ,'1600':193228,'1700':193362 ,'1800':192621 ,'1900':192438 ,'2000':192260},
 		'nev_bsl':{'800':197537,'900':197119 ,'1000': 196274,'1100':195982,'1200': 189705,'1300': 194684,'1400':193308 ,'1500': 193758,'1600':190049,'1700': 193192,'1800':192717 ,'1900': 189458,'2000':174468},
-		'nev_ttbar':{'700':3058076,'1000':1233739,'700scaleup':2225727,'1000scaleup':1225662,'700scaledown':2153111,'1000scaledown':1292980},
-		'nev_qcd':{'300':5908205,'470':3919113,'600':3902030,'800':3881338,'1000':1895936,'1400':1912782},
+ 		'nev_ttbar':{'MG':4986320},
+ 		'nev_qcd':{'300':2930578,'470':1939229,'600':1890256,'800':1911296,'1000':1461216,'1400':197959,'FLAT7000':209851.27},
 		'nev_st':{'s':259176,'sB':139604,'t':3748155,'tB':1930185,'tW':495559,'tWB':491463},
 		}
 
@@ -49,32 +51,32 @@ def LoadConstants():
 def LoadCuts(TYPE):
 	if TYPE=='default':
  		return  {
-			'wpt':[425.0,float("inf")],
-			'tpt':[425.0,float("inf")],
+			'wpt':[350.0,float("inf")],
+			'tpt':[350.0,float("inf")],
 			'dy':[0.0,float("inf")],
-			'tmass':[140.0,250.0],
+			'tmass':[130.0,200.0],
 			'nsubjets':[3,10],
-			'tau32':[0.0,0.55],
+			'tau32':[0.0,0.61],
 			'tau21':[0.0,0.5],
 			'minmass':[50.0,float("inf")],
-			'sjbtag':[0.679,1.0],
+			'sjbtag':[0.690,1.0],
 			'wmass':[70.0,100.0],
 			'eta1':[0.0,1.0],
 			'eta2':[1.0,2.4]
 			}
 	if TYPE=='rate_default':
  		return  {
-			'wpt':[425.0,float("inf")],
-			'tpt':[425.0,float("inf")],
+			'wpt':[350.0,float("inf")],
+			'tpt':[350.0,float("inf")],
 			'dy':[0.0,float("inf")],
-			'tmass':[140.0,250.0],
+			'tmass':[130.0,200.0],
 			'nsubjets':[3,10],
-			'tau32':[0.0,0.55],
+			'tau32':[0.0,0.61],
 			'tau21':[0.0,0.5],
 			'minmass':[50.0,float("inf")],
-			'sjbtag':[0.679,1.0],
+			'sjbtag':[0.690,1.0],
 			'wmass':[[30.0,70.0],[100,float("inf")]],
-			'eta1':[0.0,1.0],	
+			'eta1':[0.0,1.0],
 			'eta2':[1.0,2.4]
 			}
 
@@ -87,87 +89,92 @@ def Load_Ntuples(string):
 		files += glob.glob("/uscms_data/d3/knash/WPrime8TeV/data/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/Run2012B-22Jan2013/res/*.root")
 		files += glob.glob("/uscms_data/d3/knash/WPrime8TeV/data/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/Run2012C-22Jan2013/res/*.root")
 		files += glob.glob("/uscms_data/d3/knash/WPrime8TeV/data/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/Run2012D-22Jan2013/res/*.root")
-	if string == 'QCDHT1000':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/QCD_HT1000_to_HTinf/res/*.root" )
-	if string == 'ttbar700':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/ttbar_Mtt-700to1000/res/*.root" )
-	if string == 'ttbar1000':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/ttbar_Mtt-1000toinf/res/*.root" )
-	if string == 'ttbar700scaleup':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/ttbar_Mtt-700to1000_scaleup/res/*.root" )
-	if string == 'ttbar700scaledown':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/ttbar_Mtt-700to1000_scaledown/res/*.root" )
-	if string == 'ttbar1000scaleup':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/ttbar_Mtt-1000toInf_scaleup/res/*.root")
-	if string == 'ttbar1000scaledown':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/ttbar_Mtt-1000toInf_scaledown/res/*.root" )
-	if string == 'singletop_s':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/singletop_s/res/*.root" )
-	if string == 'singletop_sB':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/singletop_sB/res/*.root" )
-	if string == 'singletop_t':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/singletop_t/res/*.root" )
-	if string == 'singletop_tB':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/singletop_tB/res/*.root" )
-	if string == 'singletop_tW':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/singletop_tW/res/*.root" )
-	if string == 'singletop_tWB':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/singletop_tWB/res/*.root" )
-
-	if string == 'signalright800':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-800/res/*.root" )
-	if string == 'signalright900':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-900/res/*.root" )
-	if string == 'signalright1000':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1000/res/*.root" )
-	if string == 'signalright1100':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1100/res/*.root" )
-	if string == 'signalright1200':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1200/res/*.root" )
-	if string == 'signalright1300':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1300/res/*.root" )
-	if string == 'signalright1400':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1400/res/*.root" )
-	if string == 'signalright1500':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1500/res/*.root" )
-	if string == 'signalright1600':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1600/res/*.root" )
-	if string == 'signalright1700':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1700/res/*.root" )
-	if string == 'signalright1800':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1800/res/*.root" )
-	if string == 'signalright1900':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1900/res/*.root" )
-	if string == 'signalright2000':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-2000/res/*.root" )
+ 	if string == 'ttbar':
+ 		#files = glob.glob("/eos/uscms/store/user/srappocc/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_b2ganafw741_TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150522_160344/0000/*.root")
+ 		files = glob.glob("/eos/uscms/store/user/knash/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_b2ganafw741_TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150617_183103/0000/*.root")
+ 
+ 	if string == 'QCDPT300':
+ 		files = glob.glob("/eos/uscms/store/user/knash/QCD_Pt_300to470_TuneCUETP8M1_13TeV_pythia8/crab_b2ganafw741_QCD_Pt_300to470_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/*/*/*.root")
+ 	if string == 'QCDPT470':
+ 		files = glob.glob("/eos/uscms/store/user/knash/QCD_Pt_470to600_TuneCUETP8M1_13TeV_pythia8/crab_b2ganafw741_QCD_Pt_470to600_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/*/*/*.root")
+ 	if string == 'QCDPT600':
+ 		files = glob.glob("/eos/uscms/store/user/knash/QCD_Pt_600to800_TuneCUETP8M1_13TeV_pythia8/crab_b2ganafw741_QCD_Pt_600to800_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/*/*/*.root")
+ 	if string == 'QCDPT800':
+ 		files = glob.glob("/eos/uscms/store/user/knash/QCD_Pt_800to1000_TuneCUETP8M1_13TeV_pythia8/crab_b2ganafw741_QCD_Pt_800to1000_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/*/*/*.root")
+ 	if string == 'QCDPT1000':
+ 		files = glob.glob("/eos/uscms/store/user/knash/QCD_Pt_1000to1400_TuneCUETP8M1_13TeV_pythia8/crab_b2ganafw741_QCD_Pt_1000to1400_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/*/*/*.root")
+ 	if string == 'QCDPT1400':
+ 		files = glob.glob("/eos/uscms/store/user/knash/QCD_Pt_1400to1800_TuneCUETP8M1_13TeV_pythia8/crab_b2ganafw741_QCD_Pt_1400to1800_TuneCUETP8M1_13TeV_pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/*/*/*.root")
 
 
-	if string == 'signalleft800':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-800/res/*.root" )
-	if string == 'signalleft900':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-900/res/*.root" )
-	if string == 'signalleft1000':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1000/res/*.root" )
-	if string == 'signalleft1100':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1100/res/*.root" )
-	if string == 'signalleft1200':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1200/res/*.root" )
-	if string == 'signalleft1300':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1300/res/*.root" )
-	if string == 'signalleft1400':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1400/res/*.root" )
-	if string == 'signalleft1500':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1500/res/*.root" )
-	if string == 'signalleft1600':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1600/res/*.root" )
-	if string == 'signalleft1700':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1700/res/*.root" )
-	if string == 'signalleft1800':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1800/res/*.root" )
-	if string == 'signalleft1900':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1900/res/*.root" )
-	if string == 'signalleft2000':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-2000/res/*.root" )
+
+	#if string == 'singletop_s':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/singletop_s/res/*.root" )
+#	if string == 'singletop_sB':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/singletop_sB/res/*.root" )
+#	if string == 'singletop_t':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/singletop_t/res/*.root" )
+#	if string == 'singletop_tB':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/singletop_tB/res/*.root" )
+#	if string == 'singletop_tW':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/singletop_tW/res/*.root" )
+#	if string == 'singletop_tWB':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/singletop_tWB/res/*.root" )
+
+#	if string == 'signalright800':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-800/res/*.root" )
+#	if string == 'signalright900':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-900/res/*.root" )
+#	if string == 'signalright1000':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1000/res/*.root" )
+#	if string == 'signalright1100':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1100/res/*.root" )
+#	if string == 'signalright1200':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1200/res/*.root" )
+#	if string == 'signalright1300':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1300/res/*.root" )
+#	if string == 'signalright1400':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1400/res/*.root" )
+#	if string == 'signalright1500':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1500/res/*.root" )
+#	if string == 'signalright1600':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1600/res/*.root" )
+#	if string == 'signalright1700':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1700/res/*.root" )
+#	if string == 'signalright1800':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1800/res/*.root" )
+#	if string == 'signalright1900':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-1900/res/*.root" )
+#	if string == 'signalright2000':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_right_M-2000/res/*.root" )
+
+
+#	if string == 'signalleft800':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-800/res/*.root" )
+#	if string == 'signalleft900':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-900/res/*.root" )
+#	if string == 'signalleft1000':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1000/res/*.root" )
+#	if string == 'signalleft1100':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1100/res/*.root" )
+#	if string == 'signalleft1200':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1200/res/*.root" )
+#	if string == 'signalleft1300':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1300/res/*.root" )
+#	if string == 'signalleft1400':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1400/res/*.root" )
+#	if string == 'signalleft1500':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1500/res/*.root" )
+#	if string == 'signalleft1600':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1600/res/*.root" )
+#	if string == 'signalleft1700':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1700/res/*.root" )
+#	if string == 'signalleft1800':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1800/res/*.root" )
+#	if string == 'signalleft1900':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-1900/res/*.root" )
+#	if string == 'signalleft2000':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/bstar_left_M-2000/res/*.root" )
 
 	try:
 		print 'A total of ' + str(len(files)) + ' files'
@@ -186,60 +193,60 @@ def Load_Ntuples(string):
 #It works, but you should be able to just have one input
 def TTR_Init(ST,CUT,di):
 	if ST == 'Bifpoly':
-		TRBPE1 = open(di+"fitdata/bpinputeta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/bpinputQCDeta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/bpinputeta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/bpinputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",BifPoly,0,1400,5)
 		eta2fit = TF1("eta2fit",BifPoly,0,1400,5)
 		Params = 5
 	if ST == 'Bifpoly_err':
-		TRBPE1 = open(di+"fitdata/bperrorinputeta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/bperrorinputQCDeta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/bperrorinputeta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/bperrorinputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit=TF1("eta1fit",BifPolyErr,0,1400,10)
 		eta2fit=TF1("eta2fit",BifPolyErr,0,1400,10)
 		Params = 10
 
 	if ST == 'pol0':
-		TRBPE1 = open(di+"fitdata/pol0inputeta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/pol0inputQCDeta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/pol0inputeta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/pol0inputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'pol0',0,1400)
 		eta2fit = TF1("eta2fit",'pol0',0,1400)
 		Params = 1
 
 	if ST == 'pol2':
-		TRBPE1 = open(di+"fitdata/pol2inputeta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/pol2inputQCDeta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/pol2inputeta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/pol2inputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'pol2',0,1400)
 		eta2fit = TF1("eta2fit",'pol2',0,1400)
 		Params = 3
 
 	if ST == 'pol3':
-		TRBPE1 = open(di+"fitdata/pol3inputeta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/pol3inputQCDeta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/pol3inputeta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/pol3inputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'pol3',0,1400)
 		eta2fit = TF1("eta2fit",'pol3',0,1400)
 		Params = 4
 	if ST == 'FIT':
-		TRBPE1 = open(di+"fitdata/newfitinputeta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/newfitinputQCDeta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/newfitinputeta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/newfitinputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,1400)
 		eta2fit = TF1("eta2fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,1400)
 		Params = 4
 	if ST == 'expofit':
-		TRBPE1 = open(di+"fitdata/expoconinputeta1_PSET_"+CUT+".txt")
+		TRBPE1 = open(di+"fitdata/expoconinputQCDeta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
-		TRBPE2 = open(di+"fitdata/expoconinputeta2_PSET_"+CUT+".txt")
+		TRBPE2 = open(di+"fitdata/expoconinputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
 		eta1fit = TF1("eta1fit",'expo(0) + pol0(2)',0,1400)
 		eta2fit = TF1("eta2fit",'expo(0) + pol0(2)',0,1400)
@@ -260,8 +267,8 @@ def TTR_Init(ST,CUT,di):
 #A QCD background estimate based on them 
 def bkg_weight(blv, funcs, etabins):
 	for ibin in range(0,len(etabins)):
-		if (etabins[ibin][0] <= abs(blv.eta()) < etabins[ibin][1]) :
-			tagratept = funcs[ibin].Eval(blv.pt())		
+		if (etabins[ibin][0] <= abs(blv.Eta()) < etabins[ibin][1]) :
+			tagratept = funcs[ibin].Eval(blv.Perp())		
 	return tagratept
 
 #This is the bifurcated polynomial function and its associated uncertainty 
@@ -289,22 +296,12 @@ def PDF_Lookup( pdfs , pdfOP ):
         		iweight = iweight + pdf
         return (iweight/pdfs[0]) / (len(pdfs)-1) * 2.0
 #This looks up the b tagging scale factor or uncertainty
-def Trigger_Lookup( H , TRP , TROP ):
+def Trigger_Lookup( H , TRP ):
         Weight = 1.0
         if H < 1300.0:
                 bin0 = TRP.FindBin(H) 
                 jetTriggerWeight = TRP.GetBinContent(bin0)
-		deltaTriggerEff  = 0.5*(1.0-jetTriggerWeight)
-                jetTriggerWeightUp  =   jetTriggerWeight + deltaTriggerEff
-                jetTriggerWeightDown  = jetTriggerWeight - deltaTriggerEff
-                jetTriggerWeightUp  = min(1.0,jetTriggerWeightUp)
-                jetTriggerWeightDown  = max(0.0,jetTriggerWeightDown)
-                if TROP  == "nominal" :
-                	   Weight = jetTriggerWeight
-                if TROP  == "up" :
-                	   Weight = jetTriggerWeightUp
-                if TROP == "down" :
-                	   Weight = jetTriggerWeightDown
+                Weight = jetTriggerWeight
 	return Weight
 #This looks up the ttbar pt reweighting scale factor 
 def PTW_Lookup( GP ):
@@ -314,9 +311,9 @@ def PTW_Lookup( GP ):
 			isT = ig.pdgId() == 6 and ig.status() == 3
 			isTB = ig.pdgId() == -6 and ig.status() == 3
 			if isT:
-				genTpt = ig.pt()
+				genTpt = ig.Perp()
 			if isTB:
-				genTBpt = ig.pt()	
+				genTBpt = ig.Perp()	
 		if (genTpt<0) or (genTBpt<0):
 			print "ERROR"
 
@@ -324,6 +321,59 @@ def PTW_Lookup( GP ):
       		wTbarPt = exp(0.156-0.00137*genTBpt)
       		return sqrt(wTPt*wTbarPt)
 
+def Initlv(string):
+ 	PtHandle 	= 	Handle (  "vector<float> "  )
+ 	PtLabel  	= 	( string , string.replace("jets","jet")+"Pt")
+ 
+ 	EtaHandle 	= 	Handle (  "vector<float> "  )
+ 	EtaLabel  	= 	( string , string.replace("jets","jet")+"Eta")
+ 
+ 	PhiHandle 	= 	Handle (  "vector<float> "  )
+ 	PhiLabel  	= 	( string ,string.replace("jets","jet") +"Phi")
+ 
+ 	MassHandle 	= 	Handle (  "vector<float> "  )
+ 	MassLabel  	= 	( string ,string.replace("jets","jet") +"Mass")
+ 
+ 	return [[PtHandle,PtLabel],[EtaHandle,EtaLabel],[PhiHandle,PhiLabel],[MassHandle,MassLabel]]
+ 
+def Makelv(vector,event):
+ 
+     	event.getByLabel (vector[0][1], vector[0][0])
+     	Pt 		= 	vector[0][0].product()
+ 
+     	event.getByLabel (vector[1][1], vector[1][0])
+     	Eta 		= 	vector[1][0].product()
+ 
+     	event.getByLabel (vector[2][1], vector[2][0])
+     	Phi 		= 	vector[2][0].product()
+ 
+     	event.getByLabel (vector[3][1], vector[3][0])
+     	Mass 		= 	vector[3][0].product()
+ 
+ 	lvs = []
+ 	for i in range(0,len(Pt)):
+ 
+ 		#lvs.append(ROOT.Math.LorentzVector('ROOT::Math::PtEtaPhiM4D<double>')(Pt[i],Eta[i],Phi[i],Mass[i]))
+ 
+ 		lvs.append(TLorentzVector())
+ 		lvs[i].SetPtEtaPhiM(Pt[i],Eta[i],Phi[i],Mass[i])
+ 	return lvs
+ 
+ 
+def Hemispherize(LV1,LV2):
+ 	tjets = [[],[]]
+ 	wjets = [[],[]]
+ 	for iLV1 in range(0,len(LV1)):
+ 		if Math.VectorUtil.DeltaPhi(LV1[0],LV1[iLV1])> TMath.Pi()/2:
+ 			tjets[1].append(iLV1)
+ 		else:
+ 			tjets[0].append(iLV1)
+ 	for iLV2 in range(0,len(LV2)):
+ 		if Math.VectorUtil.DeltaPhi(LV1[0],LV2[iLV2])> TMath.Pi()/2:
+ 			wjets[1].append(iLV2)
+ 		else:
+ 			wjets[0].append(iLV2)
+ 	return tjets,wjets
 
 #This is just a quick function to automatically make a tree
 #This is used right now to automatically output branches used to validate the cuts used in a run
