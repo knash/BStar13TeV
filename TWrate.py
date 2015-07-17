@@ -336,7 +336,7 @@ for event in events:
 			windexval = windex[0][0]
 
 			wjet = wJetsh0[0]
-			tjet = tJetsh1[0]
+			tjet = topJetsh1[0]
 
 		if hemis == 'hemis1'  :
 			if not njets11w1:
