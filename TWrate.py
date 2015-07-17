@@ -266,61 +266,61 @@ totevents = events.size()
 print str(totevents)  +  ' Events total'
 
 for event in events:
-    count	= 	count + 1
+	count	= 	count + 1
 
    # Uncomment for a low count test run
-    #if count > 5000:
+	#if count > 5000:
 	#break
 
-    if count % 100000 == 0 :
-      print  '--------- Processing Event ' + str(count) +'   -- percent complete ' + str(100*count/totevents) + '% -- '
+	if count % 100000 == 0 :
+		print  '--------- Processing Event ' + str(count) +'   -- percent complete ' + str(100*count/totevents) + '% -- '
 
-    #Here we split up event processing based on number of jobs 
-    #This is set up to have jobs range from 1 to the total number of jobs (ie dont start at job 0)
-    if jobs != 1:
-    	if (count - 1) % jobs == 0:
+	#Here we split up event processing based on number of jobs 
+	#This is set up to have jobs range from 1 to the total number of jobs (ie dont start at job 0)
+	if jobs != 1:
+		if (count - 1) % jobs == 0:
 		jobiter+=1
 	count_index = count - (jobiter-1)*jobs
 	if count_index!=num:
 		continue 
 	
-    #We load up the relevant handles and labels and create collections
-    AK8LV = Makelv(AK8HL,event)
+	#We load up the relevant handles and labels and create collections
+	AK8LV = Makelv(AK8HL,event)
 
 	
-    if len(AK8LV)==0:
+	if len(AK8LV)==0:
 	continue
 
-    tindex,windex = Hemispherize(AK8LV,AK8LV)
+	tindex,windex = Hemispherize(AK8LV,AK8LV)
 
 
-    wJetsh1 = []
-    wJetsh0  =  []
-    topJetsh1 = []
-    topJetsh0  = []
+	wJetsh1 = []
+	wJetsh0  =  []
+	topJetsh1 = []
+	topJetsh0  = []
 
-    for i in range(0,len(windex[1])):
-   		wJetsh1.append(AK8LV[windex[1][i]])
-    for i in range(0,len(windex[0])):
-    	wJetsh0.append(AK8LV[windex[0][i]])
-    for i in range(0,len(tindex[1])):
-    	topJetsh1.append(AK8LV[tindex[1][i]])
-    for i in range(0,len(tindex[0])):
-    	topJetsh0.append(AK8LV[tindex[0][i]])
-    
-    wjh0 = 0
-    wjh1 = 0
+	for i in range(0,len(windex[1])):
+		wJetsh1.append(AK8LV[windex[1][i]])
+	for i in range(0,len(windex[0])):
+		wJetsh0.append(AK8LV[windex[0][i]])
+	for i in range(0,len(tindex[1])):
+		topJetsh1.append(AK8LV[tindex[1][i]])
+	for i in range(0,len(tindex[0])):
+		topJetsh0.append(AK8LV[tindex[0][i]])
+	
+	wjh0 = 0
+	wjh1 = 0
 
-    #Require 1 pt>150 jet in each hemisphere (top jets already have the 150GeV requirement) 
+	#Require 1 pt>150 jet in each hemisphere (top jets already have the 150GeV requirement) 
 
-    for wjet in wJetsh0:
+	for wjet in wJetsh0:
 		if wjet.Perp() > 200.0:
 			wjh0+=1
     for wjet in wJetsh1:
 		if wjet.Perp() > 200.0:
 			wjh1+=1
 
-    njets11w0 	= 	((len(topJetsh1) == 1) and (wjh0 == 1))
+	njets11w0 	= 	((len(topJetsh1) == 1) and (wjh0 == 1))
     njets11w1 	= 	((len(topJetsh0) == 1) and (wjh1 == 1))
     #We consider both the case that the w is the leading (highest pt) jet (hemis0) and the case where the top is the leading jet (hemis1)
     #We consider both the case that the w is the leading (highest pt) jet (hemis0) and the case where the top is the leading jet (hemis1)
