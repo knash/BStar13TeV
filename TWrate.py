@@ -324,8 +324,8 @@ for event in events:
     njets11w1 	= 	((len(topJetsh0) == 1) and (wjh1 == 1))
     #We consider both the case that the w is the leading (highest pt) jet (hemis0) and the case where the top is the leading jet (hemis1)
     #We consider both the case that the w is the leading (highest pt) jet (hemis0) and the case where the top is the leading jet (hemis1)
-    for hemis in ['hemis0','hemis1']:
-    	if hemis == 'hemis0'   :
+	for hemis in ['hemis0','hemis1']:
+		if hemis == 'hemis0'   :
 			if not njets11w0:
 				continue 
 			#The Ntuple entries are ordered in pt, so [0] is the highest pt entry
