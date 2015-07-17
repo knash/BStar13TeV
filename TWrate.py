@@ -444,16 +444,16 @@ for event in events:
 						#We use three eta regions 
 						if eta1_cut:
 							MtwwptcomparepreSB1e1.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
-									pteta1pretag.Fill( tjet.Perp(),weight)
-									if FullTop :
+							pteta1pretag.Fill( tjet.Perp(),weight)
+							if FullTop :
 								MtwwptcomparepostSB1e1.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
-										pteta1.Fill( tjet.Perp(),weight)
+								pteta1.Fill( tjet.Perp(),weight)
 						if eta2_cut:
 							MtwwptcomparepreSB1e2.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
-									pteta2pretag.Fill( tjet.Perp(),weight)
-									if FullTop :
-								MtwwptcomparepostSB1e2.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
-										pteta2.Fill( tjet.Perp(),weight)
+							pteta2pretag.Fill( tjet.Perp(),weight)
+								if FullTop :
+									MtwwptcomparepostSB1e2.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
+									pteta2.Fill( tjet.Perp(),weight)
 			
 						temp_variables = {"wpt":wjet.Perp(),"wmass":wjet.Mass(),"tpt":tjet.Perp(),"tmass":topJetMass[0],"tau32":tau32val,"tau21":tau21val,"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax,"weight":weight}
 						for tv in tree_vars.keys():
