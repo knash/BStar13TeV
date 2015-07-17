@@ -352,117 +352,117 @@ for event in events:
 		weight=1.0
 		#Cuts are loaded from the Bstar_Functions.py file
 		#here wpt[0] is 370 and wpt[1] is inf, so we are making sure the b pt is at least 370 GeV
-			wpt_cut = wpt[0]<wjet.Perp()<wpt[1]
-			tpt_cut = tpt[0]<tjet.Perp()<tpt[1]
-			dy_cut = dy[0]<=abs(tjet.Rapidity()-wjet.Rapidity())<dy[1]
-			#We first perform the top and b candidate pt cuts and the deltaY cut
-			if wpt_cut and tpt_cut and dy_cut: 
-				if False: #options.set!="data":
-					#Pileup reweighting is done here 
-					event.getByLabel (puLabel, puHandle)
-					PileUp 		= 	puHandle.product()
-					bin1 = PilePlot.FindBin(PileUp[0]) 
-					weight *= PilePlot.GetBinContent(bin1)
+		wpt_cut = wpt[0]<wjet.Perp()<wpt[1]
+		tpt_cut = tpt[0]<tjet.Perp()<tpt[1]
+		dy_cut = dy[0]<=abs(tjet.Rapidity()-wjet.Rapidity())<dy[1]
+		#We first perform the top and b candidate pt cuts and the deltaY cut
+		if wpt_cut and tpt_cut and dy_cut: 
+			if False: #options.set!="data":
+				#Pileup reweighting is done here 
+				event.getByLabel (puLabel, puHandle)
+				PileUp 		= 	puHandle.product()
+				bin1 = PilePlot.FindBin(PileUp[0]) 
+				weight *= PilePlot.GetBinContent(bin1)
 
-				event.getByLabel (softDropMassLabel, softDropMassHandle)
-        		topJetMass 	= 	softDropMassHandle.product()
-        		event.getByLabel ( nSubjetsLabel , nSubjetsHandle )
-    			nSubjets 		= 	nSubjetsHandle.product()
-        		event.getByLabel (minmassLabel, minmassHandle)
-    			topJetminmass 	= 	minmassHandle.product()
-				tmass_cut = tmass[0]<topJetMass[tindexval]<tmass[1]
-				nsubjets_cut = nsubjets[0]<=nSubjets[tindexval]<nsubjets[1]
+			event.getByLabel (softDropMassLabel, softDropMassHandle)
+			topJetMass 	= 	softDropMassHandle.product()
+			event.getByLabel ( nSubjetsLabel , nSubjetsHandle )
+			nSubjets 		= 	nSubjetsHandle.product()
+			event.getByLabel (minmassLabel, minmassHandle)
+			topJetminmass 	= 	minmassHandle.product()
+			tmass_cut = tmass[0]<topJetMass[tindexval]<tmass[1]
+			nsubjets_cut = nsubjets[0]<=nSubjets[tindexval]<nsubjets[1]
+		
+			#Now we start top-tagging.  In this file, we use a sideband based on inverting some top-tagging requirements
+			if tmass_cut:
+				minmass_cut = minmass[0]<=topJetMinMass[0]<minmass[1]
+				ht = tjet.Perp() + wjet.Perp()
+				if tname != [] and options.set!='data' :
+					#Trigger reweighting done here
+					TRW = Trigger_Lookup( ht , TrigPlot)
+					weight*=TRW
+
+
+
+				if False: #options.ptreweight == "on":
+					#ttbar pt reweighting done here
+					event.getByLabel( GenLabel, GenHandle )
+					GenParticles = GenHandle.product()
+					PTW = PTW_Lookup( GenParticles )
+					weight*=PTW
+
+
+				event.getByLabel (subjets0indexLabel, subjets0indexHandle)
+				subjets0index 		= 	subjets0indexHandle.product() 
+
+				event.getByLabel (subjets1indexLabel, subjets1indexHandle)
+				subjets1index 		= 	subjets1indexHandle.product() 
+
+				event.getByLabel (subjets2indexLabel, subjets2indexHandle)
+				subjets2index 		= 	subjets2indexHandle.product() 
+
+				event.getByLabel (subjets3indexLabel, subjets3indexHandle)
+				subjets3index 		= 	subjets3indexHandle.product()
+
+				event.getByLabel (subjetsCSVLabel, subjetsCSVHandle)
+				subjetsCSV 		= 	subjetsCSVHandle.product()  
+
+				event.getByLabel (TopTau3Label, TopTau3Handle)
+				Tau3		= 	tau3Handle.product() 
+
+				event.getByLabel (TopTau2Label, TopTau2Handle)
+				Tau2		= 	tau2Handle.product() 
+
+				event.getByLabel (TopTau1Label, TopTau1Handle)
+				Tau1		= 	tau1Handle.product() 
+
+				index = -1
+
+				tau21val=Tau2[windex]/Tau1[windex]
+				tau21_cut =  tau21[0]<=tau21val<tau21[1]
+
+				tau32val =  Tau3[tindex]/Tau2[tindex]
+				tau32_cut =  tau32[0]<=tau32val<tau32[1]
+
+				SJ_csvs = [subjets0index,subjets1index,subjets2index,subjets3index]
+		
+				SJ_csvvals = []
+				for icsv in range(0,int(nSubjets[tindexval])):
+					if int(SJ_csvs[icsv][tindexval])!=-1:
+						SJ_csvvals.append(subjetsCSV[int(SJ_csvs[icsv][tindexval])])
+					else:
+						SJ_csvvals.append(0.)
+				SJ_csvmax = max(SJ_csvvals)
+				sjbtag_cut = sjbtag[0]<SJ_csvmax<=sjbtag[1]
+				wmass_cut = wmass[0][0]<=wjet.Mass()<wmass[0][1] or wmass[1][0]<=wjet.Mass()<wmass[1][1] 
+				FullTop = sjbtag_cut and tau32_cut and nsubjets_cut and minmass_cut
+				if wmass_cut:
+					if tau21_cut:
+						eta1_cut = eta1[0]<=abs(tjet.Eta())<eta1[1]
+						eta2_cut = eta2[0]<=abs(tjet.Eta())<eta2[1]
+						#Extract tags and probes for the average b tagging rate here 
+						#We use three eta regions 
+						if eta1_cut:
+							MtwwptcomparepreSB1e1.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
+									pteta1pretag.Fill( tjet.Perp(),weight)
+									if FullTop :
+								MtwwptcomparepostSB1e1.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
+										pteta1.Fill( tjet.Perp(),weight)
+						if eta2_cut:
+							MtwwptcomparepreSB1e2.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
+									pteta2pretag.Fill( tjet.Perp(),weight)
+									if FullTop :
+								MtwwptcomparepostSB1e2.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
+										pteta2.Fill( tjet.Perp(),weight)
 			
-				#Now we start top-tagging.  In this file, we use a sideband based on inverting some top-tagging requirements
-				if tmass_cut:
-					minmass_cut = minmass[0]<=topJetMinMass[0]<minmass[1]
-					ht = tjet.Perp() + wjet.Perp()
-					if tname != [] and options.set!='data' :
-						#Trigger reweighting done here
-						TRW = Trigger_Lookup( ht , TrigPlot)
-						weight*=TRW
+						temp_variables = {"wpt":wjet.Perp(),"wmass":wjet.Mass(),"tpt":tjet.Perp(),"tmass":topJetMass[0],"tau32":tau32val,"tau21":tau21val,"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax,"weight":weight}
+						for tv in tree_vars.keys():
+							tree_vars[tv][0] = temp_variables[tv]
+						Tree.Fill()
 
 
+	f.cd()
+	f.Write()
+	f.Close()
 
-					if False: #options.ptreweight == "on":
-						#ttbar pt reweighting done here
-						event.getByLabel( GenLabel, GenHandle )
-						GenParticles = GenHandle.product()
-						PTW = PTW_Lookup( GenParticles )
-						weight*=PTW
-
-
-    				event.getByLabel (subjets0indexLabel, subjets0indexHandle)
-    				subjets0index 		= 	subjets0indexHandle.product() 
-
-    				event.getByLabel (subjets1indexLabel, subjets1indexHandle)
-    				subjets1index 		= 	subjets1indexHandle.product() 
-
-    				event.getByLabel (subjets2indexLabel, subjets2indexHandle)
-    				subjets2index 		= 	subjets2indexHandle.product() 
-
-    				event.getByLabel (subjets3indexLabel, subjets3indexHandle)
-    				subjets3index 		= 	subjets3indexHandle.product()
-
-    				event.getByLabel (subjetsCSVLabel, subjetsCSVHandle)
-    				subjetsCSV 		= 	subjetsCSVHandle.product()  
-
-					event.getByLabel (TopTau3Label, TopTau3Handle)
-					Tau3		= 	tau3Handle.product() 
-
-					event.getByLabel (TopTau2Label, TopTau2Handle)
-					Tau2		= 	tau2Handle.product() 
-	
-					event.getByLabel (TopTau1Label, TopTau1Handle)
-					Tau1		= 	tau1Handle.product() 
-
-					index = -1
-
-					tau21val=Tau2[windex]/Tau1[windex]
-					tau21_cut =  tau21[0]<=tau21val<tau21[1]
-
-					tau32val =  Tau3[tindex]/Tau2[tindex]
-					tau32_cut =  tau32[0]<=tau32val<tau32[1]
-
-					SJ_csvs = [subjets0index,subjets1index,subjets2index,subjets3index]
-			
-					SJ_csvvals = []
-					for icsv in range(0,int(nSubjets[tindexval])):
-						if int(SJ_csvs[icsv][tindexval])!=-1:
-							SJ_csvvals.append(subjetsCSV[int(SJ_csvs[icsv][tindexval])])
-						else:
-							SJ_csvvals.append(0.)
-					SJ_csvmax = max(SJ_csvvals)
-					sjbtag_cut = sjbtag[0]<SJ_csvmax<=sjbtag[1]
-					wmass_cut = wmass[0][0]<=wjet.Mass()<wmass[0][1] or wmass[1][0]<=wjet.Mass()<wmass[1][1] 
-					FullTop = sjbtag_cut and tau32_cut and nsubjets_cut and minmass_cut
-					if wmass_cut:
-						if tau21_cut:
-							eta1_cut = eta1[0]<=abs(tjet.Eta())<eta1[1]
-							eta2_cut = eta2[0]<=abs(tjet.Eta())<eta2[1]
-							#Extract tags and probes for the average b tagging rate here 
-							#We use three eta regions 
-							if eta1_cut:
-								MtwwptcomparepreSB1e1.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
-										pteta1pretag.Fill( tjet.Perp(),weight)
-										if FullTop :
-									MtwwptcomparepostSB1e1.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
-											pteta1.Fill( tjet.Perp(),weight)
-							if eta2_cut:
-								MtwwptcomparepreSB1e2.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
-										pteta2pretag.Fill( tjet.Perp(),weight)
-										if FullTop :
-									MtwwptcomparepostSB1e2.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
-											pteta2.Fill( tjet.Perp(),weight)
-				
-							temp_variables = {"wpt":wjet.Perp(),"wmass":wjet.Mass(),"tpt":tjet.Perp(),"tmass":topJetMass[0],"tau32":tau32val,"tau21":tau21val,"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax,"weight":weight}
-							for tv in tree_vars.keys():
-								tree_vars[tv][0] = temp_variables[tv]
-							Tree.Fill()
-
-
-		f.cd()
-		f.Write()
-		f.Close()
-
-		print "number of events: " + str(count)
+	print "number of events: " + str(count)
