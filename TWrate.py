@@ -279,10 +279,10 @@ for event in events:
 	#This is set up to have jobs range from 1 to the total number of jobs (ie dont start at job 0)
 	if jobs != 1:
 		if (count - 1) % jobs == 0:
-		jobiter+=1
-	count_index = count - (jobiter-1)*jobs
-	if count_index!=num:
-		continue 
+			jobiter+=1
+		count_index = count - (jobiter-1)*jobs
+		if count_index!=num:
+			continue 
 	
 	#We load up the relevant handles and labels and create collections
 	AK8LV = Makelv(AK8HL,event)
