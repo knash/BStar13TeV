@@ -408,13 +408,13 @@ for event in events:
 				event.getByLabel (subjetsCSVLabel, subjetsCSVHandle)
 				subjetsCSV 		= 	subjetsCSVHandle.product()  
 
-				event.getByLabel (TopTau3Label, TopTau3Handle)
+				event.getByLabel (tau3Label, tau3Handle)
 				Tau3		= 	tau3Handle.product() 
 
-				event.getByLabel (TopTau2Label, TopTau2Handle)
+				event.getByLabel (tau2Label, tau2Handle)
 				Tau2		= 	tau2Handle.product() 
 
-				event.getByLabel (TopTau1Label, TopTau1Handle)
+				event.getByLabel (tau1Label, tau1Handle)
 				Tau1		= 	tau1Handle.product() 
 
 				index = -1
