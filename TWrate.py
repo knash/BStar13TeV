@@ -118,7 +118,8 @@ else:
 
 
 #Based on what set we want to analyze, we find all Ntuple root files 
-files = Load_Ntuples(options.set, options.bx)
+#files = Load_Ntuples(options.set, options.bx)
+files = Load_Ntuples(options.set)
 if (options.set.find('ttbar') != -1) or (options.set.find('singletop') != -1):
 	settype = 'ttbar'
 elif (options.set.find('QCD') != -1):
