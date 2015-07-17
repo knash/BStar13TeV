@@ -1,14 +1,14 @@
-python ./tardir/TBrate.py -s ttbar -n 1 -j 5  -g on
-python ./tardir/TBrate.py -s ttbar -n 2 -j 5  -g on
-python ./tardir/TBrate.py -s ttbar -n 3 -j 5  -g on
-python ./tardir/TBrate.py -s ttbar -n 4 -j 5  -g on
-python ./tardir/TBrate.py -s ttbar -n 5 -j 5  -g on
+python ./tardir/TWrate.py -s ttbar -n 1 -j 5  -g on
+python ./tardir/TWrate.py -s ttbar -n 2 -j 5  -g on
+python ./tardir/TWrate.py -s ttbar -n 3 -j 5  -g on
+python ./tardir/TWrate.py -s ttbar -n 4 -j 5  -g on
+python ./tardir/TWrate.py -s ttbar -n 5 -j 5  -g on
 
-python ./tardir/TBrate.py -s signalright2000   -g on
+python ./tardir/TWrate.py -s signalright2000   -g on
 
-python ./tardir/TBrate.py -s QCDPT300   -g on
-python ./tardir/TBrate.py -s QCDPT470     -g on
-python ./tardir/TBrate.py -s QCDPT600     -g on
-python ./tardir/TBrate.py -s QCDPT800     -g on
-python ./tardir/TBrate.py -s QCDPT1000     -g on
-python ./tardir/TBrate.py -s QCDPT1400     -g on
+python ./tardir/TWrate.py -s QCDPT300   -g on
+python ./tardir/TWrate.py -s QCDPT470     -g on
+python ./tardir/TWrate.py -s QCDPT600     -g on
+python ./tardir/TWrate.py -s QCDPT800     -g on
+python ./tardir/TWrate.py -s QCDPT1000     -g on
+python ./tardir/TWrate.py -s QCDPT1400     -g on
