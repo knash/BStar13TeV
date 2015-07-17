@@ -376,7 +376,7 @@ for event in events:
 		
 			#Now we start top-tagging.  In this file, we use a sideband based on inverting some top-tagging requirements
 			if tmass_cut:
-				minmass_cut = minmass[0]<=topJetMinMass[0]<minmass[1]
+				minmass_cut = minmass[0]<=topJetminmass[0]<minmass[1]
 				ht = tjet.Perp() + wjet.Perp()
 				if tname != [] and options.set!='data' :
 					#Trigger reweighting done here
