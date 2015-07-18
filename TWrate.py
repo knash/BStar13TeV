@@ -294,6 +294,8 @@ for event in events:
 
 	tindex,windex = Hemispherize(AK8LV,AK8LV)
 
+	print "tindex: " + str(tindex)
+	print "windex: " + str(windex)
 
 	wJetsh1 = []
 	wJetsh0  =  []
