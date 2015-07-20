@@ -32,12 +32,12 @@ from DataFormats.FWLite import Events, Handle
 #If I wanted to access the left handed W' cross section at 1900 GeV I could do Xsecl1900 = LoadConstants()['xsec_wpl']['1900']
 def LoadConstants():
 	 return  {
-		'lumi':4000,
+		'lumi':5000.0,
 		'ttagsf':1.0,
 		'wtagsf':1.0,
 		'xsec_bsr':{'800': 1.362,'900': 0.662,'1000': 0.336,'1100':0.178 ,'1200':0.0966 ,'1300': 0.0540,'1400': 0.0310,'1500': 0.0181,'1600': 0.0108,'1700': 0.00652,'1800': 0.00399,'1900': 0.00249,'2000': 0.00156},
 		'xsec_ttbar':{'MG':806.0},
- 		'xsec_qcd':{'300':7823,'470':648.2,'600':186.9,'800':32.293,'1000':9.4183,'1400':0.84265,'800_BROKEN':32.293,'FLAT7000':2022100000},
+ 		'xsec_qcd':{'300':7475.0,'470':587.1,'600':167.0,'800':28.25,'1000':8.195,'1400':0.7346,'800_BROKEN':32.293,'FLAT7000':2022100000},
 		'xsec_st':{'s':3.79,'sB':1.76,'t':56.4,'tB':30.7,'tW':11.1,'tWB':11.1},
 		'nev_bsr':{'800':197491,'900':197117 ,'1000':196569 ,'1100':195855,'1200':195455 ,'1300':194988 ,'1400':194177 ,'1500':193291 ,'1600':193228,'1700':193362 ,'1800':192621 ,'1900':192438 ,'2000':192260},
 		'nev_bsl':{'800':197537,'900':197119 ,'1000': 196274,'1100':195982,'1200': 189705,'1300': 194684,'1400':193308 ,'1500': 193758,'1600':190049,'1700': 193192,'1800':192717 ,'1900': 189458,'2000':174468},
@@ -82,13 +82,13 @@ def LoadCuts(TYPE):
 
 #This function loads up Ntuples based on what type of set you want to analyze.  
 #This needs to be updated whenever new Ntuples are produced (unless the file locations are the same).
-def Load_Ntuples(string):
+def Load_Ntuples(string,bx):
 	print 'running on ' + string 
-	if string == 'data':
-		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/data/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/Run2012A-22Jan2013/res/*.root")
-		files += glob.glob("/uscms_data/d3/knash/WPrime8TeV/data/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/Run2012B-22Jan2013/res/*.root")
-		files += glob.glob("/uscms_data/d3/knash/WPrime8TeV/data/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/Run2012C-22Jan2013/res/*.root")
-		files += glob.glob("/uscms_data/d3/knash/WPrime8TeV/data/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/Run2012D-22Jan2013/res/*.root")
+	#if string == 'data':
+#		files = glob.glob("/uscms_data/d3/knash/WPrime8TeV/data/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/Run2012A-22Jan2013/res/*.root")
+#		files += glob.glob("/uscms_data/d3/knash/WPrime8TeV/data/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/Run2012B-22Jan2013/res/*.root")
+#		files += glob.glob("/uscms_data/d3/knash/WPrime8TeV/data/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/Run2012C-22Jan2013/res/*.root")
+#		files += glob.glob("/uscms_data/d3/knash/WPrime8TeV/data/CMSSW_5_3_18/src/Analysis/TTBSMPatTuples/test/Run2012D-22Jan2013/res/*.root")
  	if string == 'ttbar':
  		#files = glob.glob("/eos/uscms/store/user/srappocc/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_b2ganafw741_TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150522_160344/0000/*.root")
  		files = glob.glob("/eos/uscms/store/user/knash/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_b2ganafw741_TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150617_183103/0000/*.root")
