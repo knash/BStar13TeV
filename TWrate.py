@@ -294,9 +294,6 @@ for event in events:
 
 	tindex,windex = Hemispherize(AK8LV,AK8LV)
 
-	print "tindex: " + str(tindex)
-	print "windex: " + str(windex)
-
 	wJetsh1 = []
 	wJetsh0  =  []
 	topJetsh1 = []
@@ -421,10 +418,10 @@ for event in events:
 
 				index = -1
 
-				tau21val=Tau2[windex]/Tau1[windex]
+				tau21val=Tau2[windexval]/Tau1[windexval]
 				tau21_cut =  tau21[0]<=tau21val<tau21[1]
 
-				tau32val =  Tau3[tindex]/Tau2[tindex]
+				tau32val =  Tau3[tindexval]/Tau2[tindexval]
 				tau32_cut =  tau32[0]<=tau32val<tau32[1]
 
 				SJ_csvs = [subjets0index,subjets1index,subjets2index,subjets3index]
@@ -437,7 +434,7 @@ for event in events:
 						SJ_csvvals.append(0.)
 				SJ_csvmax = max(SJ_csvvals)
 				sjbtag_cut = sjbtag[0]<SJ_csvmax<=sjbtag[1]
-				wmass_cut = wmass[0][0]<=wjet.Mass()<wmass[0][1] or wmass[1][0]<=wjet.Mass()<wmass[1][1] 
+				wmass_cut = wmass[0][0]<=wjet.M()<wmass[0][1] or wmass[1][0]<=wjet.M()<wmass[1][1] 
 				FullTop = sjbtag_cut and tau32_cut and nsubjets_cut and minmass_cut
 				if wmass_cut:
 					if tau21_cut:
@@ -446,26 +443,26 @@ for event in events:
 						#Extract tags and probes for the average b tagging rate here 
 						#We use three eta regions 
 						if eta1_cut:
-							MtwwptcomparepreSB1e1.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
+							MtwwptcomparepreSB1e1.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
 							pteta1pretag.Fill( tjet.Perp(),weight)
 							if FullTop :
-								MtwwptcomparepostSB1e1.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
+								MtwwptcomparepostSB1e1.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
 								pteta1.Fill( tjet.Perp(),weight)
 						if eta2_cut:
-							MtwwptcomparepreSB1e2.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
+							MtwwptcomparepreSB1e2.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
 							pteta2pretag.Fill( tjet.Perp(),weight)
 							if FullTop :
-								MtwwptcomparepostSB1e2.Fill(tjet.Perp(),(tjet+wjet).Mass(),weight)
+								MtwwptcomparepostSB1e2.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
 								pteta2.Fill( tjet.Perp(),weight)
 			
-						temp_variables = {"wpt":wjet.Perp(),"wmass":wjet.Mass(),"tpt":tjet.Perp(),"tmass":topJetMass[0],"tau32":tau32val,"tau21":tau21val,"nsubjets":NSubJets[0],"sjbtag":SJ_csvmax,"weight":weight}
+						temp_variables = {"wpt":wjet.Perp(),"wmass":wjet.M(),"tpt":tjet.Perp(),"tmass":topJetMass[0],"tau32":tau32val,"tau21":tau21val,"nsubjets":nSubjets[0],"sjbtag":SJ_csvmax,"weight":weight}
 						for tv in tree_vars.keys():
 							tree_vars[tv][0] = temp_variables[tv]
 						Tree.Fill()
 
 
-	f.cd()
-	f.Write()
-	f.Close()
+f.cd()
+f.Write()
+f.Close()
 
-	print "number of events: " + str(count)
+print "number of events: " + str(count)
