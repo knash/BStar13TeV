@@ -49,7 +49,7 @@ files_to_sum = list(set(j))
 
 commands = []
 commands.append('rm *.log') 
-commands.append('rm temprootfiles/*.root')
+#commands.append('rm temprootfiles/*.root')
 commands.append('rm -rf notneeded')
 for f in files_to_sum:
 	commands.append('rm '+f) 
@@ -57,25 +57,21 @@ for f in files_to_sum:
 	commands.append('mv ' +  f.replace('_PSET','_job*_PSET') + ' temprootfiles/')
 	commands.append('mv ' +  f + ' rootfiles/')
 
-ttbarfiles = sorted(glob.glob('TWanalyzerttbar700*_PSET_'+cuts+'.root'))
-for f in ttbarfiles:
-	basename = f.replace('700','')
-	name700 = f
-	name1000 = f.replace('700','1000')
+commands.append('rm rootfiles/TWanalyzerQCD_Trigger_nominal_none_PSET_rate_default.root')
+commands.append('python HistoWeight.py -i TWanalyzerQCDPT300_Trigger_nominal_none_PSET_'+cuts+'.root -o temprootfiles/TWanalyzerQCDPT300_Trigger_nominal_none_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['300']/nev_qcd['300']))
+commands.append('python HistoWeight.py -i TWanalyzerQCDPT470_Trigger_nominal_none_PSET_'+cuts+'.root -o temprootfiles/TWanalyzerQCDPT470_Trigger_nominal_none_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['470']/nev_qcd['470']))
+commands.append('python HistoWeight.py -i TWanalyzerQCDPT600_Trigger_nominal_none_PSET_'+cuts+'.root -o temprootfiles/TWanalyzerQCDPT600_Trigger_nominal_none_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['600']/nev_qcd['600']))
+commands.append('python HistoWeight.py -i TWanalyzerQCDPT800_Trigger_nominal_none_PSET_'+cuts+'.root -o temprootfiles/TWanalyzerQCDPT800_Trigger_nominal_none_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['800']/nev_qcd['800']))
+commands.append('python HistoWeight.py -i TWanalyzerQCDPT1000_Trigger_nominal_none_PSET_'+cuts+'.root -o temprootfiles/TWanalyzerQCDPT1000_Trigger_nominal_none_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['1000']/nev_qcd['1000']))
+#commands.append('python HistoWeight.py -i TWanalyzerQCDPT1400_Trigger_nominal_none_PSET_'+cuts+'.root -o temprootfiles/TWanalyzerQCDPT1400_Trigger_nominal_none_PSET_'+cuts+'weighted.root -w ' + str(lumi*xsec_qcd['1400']/nev_qcd['1400']))
+commands.append('hadd TWanalyzerQCD_Trigger_nominal_none_PSET_'+cuts+'.root temprootfiles/TWanalyzerQCDPT*_Trigger_nominal_none_PSET_'+cuts+'weighted.root')
+commands.append('mv TWanalyzerQCDPT*_Trigger_nominal_none_PSET_'+cuts+'.root temprootfiles/')
+commands.append('mv TWanalyzerQCD_Trigger_nominal_none_PSET_'+cuts+'.root rootfiles/')
 
-	scalestr = ''
-
-	if name700.find('ttbar700scaleup') != -1:
-		scalestr = 'scaleup'
-	if name700.find('ttbar700scaledown') != -1:
-		scalestr = 'scaledown'
-
-	commands.append('rm ' + basename)
-	commands.append('python HistoWeight.py -i '+name700+' -o temprootfiles/'+name700.replace('.root','')+'weighted.root -w ' + str(lumi*xsec_ttbar['700']*ttagsf*wtagsf/nev_ttbar['700'+scalestr]))
-	commands.append('python HistoWeight.py -i '+name1000+' -o temprootfiles/'+name1000.replace('.root','')+'weighted.root -w ' + str(lumi*xsec_ttbar['1000']*ttagsf*wtagsf/nev_ttbar['1000'+scalestr]))
-	commands.append('hadd '+basename+' temprootfiles/'+name700.replace('.root','')+'weighted.root temprootfiles/'+name1000.replace('.root','')+'weighted.root')
-	commands.append('mv ' + name700 + ' ' + name1000 + ' temprootfiles/')
-	commands.append('mv ' + basename + ' rootfiles/')
+commands.append('rm rootfiles/TWanalyzerweightedttbar_Trigger_nominal_none_PSET_'+cuts+'.root')
+commands.append('python HistoWeight.py -i TWanalyzerttbar_Trigger_nominal_none_PSET_'+cuts+'.root -o TWanalyzerweightedttbar_Trigger_nominal_none_PSET_'+cuts+'.root -w ' + str(lumi*xsec_ttbar['MG']/nev_ttbar['MG']))
+commands.append('mv TWanalyzerweightedttbar_Trigger_nominal_none_PSET_'+cuts+'.root rootfiles/')
+commands.append('mv TWanalyzerttbar_Trigger_nominal_none_PSET_'+cuts+'.root temprootfiles/')
 
 
 for coup in ['right','left']:

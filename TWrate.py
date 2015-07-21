@@ -375,7 +375,7 @@ for event in events:
 		
 			#Now we start top-tagging.  In this file, we use a sideband based on inverting some top-tagging requirements
 			if tmass_cut:
-				minmass_cut = minmass[0]<=topJetminmass[0]<minmass[1]
+				minmass_cut = minmass[0]<=topJetminmass[tindexval]<minmass[1]
 				ht = tjet.Perp() + wjet.Perp()
 				if tname != [] and options.set!='data' :
 					#Trigger reweighting done here
@@ -455,7 +455,7 @@ for event in events:
 								MtwwptcomparepostSB1e2.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
 								pteta2.Fill( tjet.Perp(),weight)
 			
-						temp_variables = {"wpt":wjet.Perp(),"wmass":wjet.M(),"tpt":tjet.Perp(),"tmass":topJetMass[0],"tau32":tau32val,"tau21":tau21val,"nsubjets":nSubjets[0],"sjbtag":SJ_csvmax,"weight":weight}
+						temp_variables = {"wpt":wjet.Perp(),"wmass":wjet.M(),"tpt":tjet.Perp(),"tmass":topJetMass[tindexval],"tau32":tau32val,"tau21":tau21val,"nsubjets":nSubjets[0],"sjbtag":SJ_csvmax,"weight":weight}
 						for tv in tree_vars.keys():
 							tree_vars[tv][0] = temp_variables[tv]
 						Tree.Fill()
