@@ -48,7 +48,7 @@ files_to_sum = list(set(j))
 
 commands = []
 commands.append('rm *.log') 
-commands.append('rm temprootfiles/*.root')
+#commands.append('rm temprootfiles/*.root')
 commands.append('rm -rf notneeded')
 for f in files_to_sum:
 	commands.append('rm '+f) 

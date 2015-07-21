@@ -1,113 +1,12 @@
-#Lucas was here
+python ./tardir/TWanalyzer.py -s ttbar  -g on
 
-python ./tardir/TWanalyzer.py -n 1 -j 8 -g on
-python ./tardir/TWanalyzer.py -n 2 -j 8 -g on
-python ./tardir/TWanalyzer.py -n 3 -j 8 -g on
-python ./tardir/TWanalyzer.py -n 4 -j 8 -g on
-python ./tardir/TWanalyzer.py -n 5 -j 8 -g on
-python ./tardir/TWanalyzer.py -n 6 -j 8 -g on
-python ./tardir/TWanalyzer.py -n 7 -j 8 -g on
-python ./tardir/TWanalyzer.py -n 8 -j 8 -g on
+python ./tardir/TWanalyzer.py -s QCDPT300   -g on
+python ./tardir/TWanalyzer.py -s QCDPT470   -g on
+python ./tardir/TWanalyzer.py -s QCDPT600   -g on
+python ./tardir/TWanalyzer.py -s QCDPT800   -g on
+python ./tardir/TWanalyzer.py -s QCDPT1000   -g on
+python ./tardir/TWanalyzer.py -s QCDPT1400   -g on
 
-python ./tardir/TWanalyzer.py -n 1 -j 8 -y up -g on
-python ./tardir/TWanalyzer.py -n 2 -j 8 -y up -g on
-python ./tardir/TWanalyzer.py -n 3 -j 8 -y up -g on
-python ./tardir/TWanalyzer.py -n 4 -j 8 -y up -g on
-python ./tardir/TWanalyzer.py -n 5 -j 8 -y up -g on
-python ./tardir/TWanalyzer.py -n 6 -j 8 -y up -g on
-python ./tardir/TWanalyzer.py -n 7 -j 8 -y up -g on
-python ./tardir/TWanalyzer.py -n 8 -j 8 -y up -g on
-
-python ./tardir/TWanalyzer.py -n 1 -j 8 -y down -g on
-python ./tardir/TWanalyzer.py -n 2 -j 8 -y down -g on
-python ./tardir/TWanalyzer.py -n 3 -j 8 -y down -g on
-python ./tardir/TWanalyzer.py -n 4 -j 8 -y down -g on
-python ./tardir/TWanalyzer.py -n 5 -j 8 -y down -g on
-python ./tardir/TWanalyzer.py -n 6 -j 8 -y down -g on
-python ./tardir/TWanalyzer.py -n 7 -j 8 -y down -g on
-python ./tardir/TWanalyzer.py -n 8 -j 8 -y down -g on
-
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -g on
-python ./tardir/TWanalyzer.py -s singletop_s -t nominal -g on
-python ./tardir/TWanalyzer.py -s singletop_sB -t nominal -g on
-python ./tardir/TWanalyzer.py -s singletop_t -t nominal -g on
-python ./tardir/TWanalyzer.py -s singletop_tB -t nominal -g on
-python ./tardir/TWanalyzer.py -s singletop_tW -t nominal -g on
-python ./tardir/TWanalyzer.py -s singletop_tWB -t nominal -g on
-
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-x_up_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-x_off_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_up_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_down_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-m_ScaleUp_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-m_ScaleDown_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-m_PtSmearUp_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-m_PtSmearDown_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-m_EtaSmearUp_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal_-m_EtaSmearDown_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal__-p_up_-z_MSTW2008nnlo68cl_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal__-p_down_-z_MSTW2008nnlo68cl_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal__-p_up_-z_NNPDF23_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal__-p_down_-z_NNPDF23_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal__-p_up_-z_CT10_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalright_-t_nominal__-p_down_-z_CT10_-g_on
-
-
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-x_up_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-x_off_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_up_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_down_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-m_ScaleUp_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-m_ScaleDown_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-m_PtSmearUp_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-m_PtSmearDown_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-m_EtaSmearUp_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal_-m_EtaSmearDown_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal__-p_up_-z_MSTW2008nnlo68cl_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal__-p_down_-z_MSTW2008nnlo68cl_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal__-p_up_-z_NNPDF23_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal__-p_down_-z_NNPDF23_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal__-p_up_-z_CT10_-g_on
-python ./tardir/TWsequencer.py -c python_./tardir/TWanalyzer.py_-s_signalleft_-t_nominal__-p_down_-z_CT10_-g_on
-
-
-python ./tardir/TWanalyzer.py -s ttbar700 -t up -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t down -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal -x off -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal -m ScaleUp -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal -m ScaleDown -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal -m PtSmearDown -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal -m PtSmearUp -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal -m EtaSmearUp -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal -m EtaSmearDown -g on
-python ./tardir/TWanalyzer.py -s ttbar700scaleup -t nominal -g on
-python ./tardir/TWanalyzer.py -s ttbar700scaledown -t nominal -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal  -p up -z CT10 -g on -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal  -p down -z CT10 -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal  -p up -z NNPDF23 -g on -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal  -p down -z NNPDF23 -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal  -p up -z MSTW2008nnlo68cl -g on -g on
-python ./tardir/TWanalyzer.py -s ttbar700 -t nominal  -p down -z MSTW2008nnlo68cl -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t up -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t down -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -x off -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -m ScaleUp -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -m ScaleDown -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -m PtSmearDown -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -m PtSmearUp -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -m EtaSmearUp -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -m EtaSmearDown -g on
-python ./tardir/TWanalyzer.py -s ttbar1000scaleup -t nominal -g on
-python ./tardir/TWanalyzer.py -s ttbar1000scaledown -t nominal -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -p up -z CT10 -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -p down -z CT10 -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -p up -z NNPDF23 -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -p down -z NNPDF23 -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -p up -z MSTW2008nnlo68cl -g on
-python ./tardir/TWanalyzer.py -s ttbar1000 -t nominal -p down -z MSTW2008nnlo68cl -g on
-
-
-
+#python ./tardir/TWanalyzer.py -s signalright1300 -g on
+#python ./tardir/TWanalyzer.py -s signalright2000 -g on
+#python ./tardir/TWanalyzer.py -s signalright2700 -g on
