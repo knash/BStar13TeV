@@ -82,7 +82,6 @@ Outf35   =   open("fitdata/expolinerrorinput"+setstr+"eta2_PSET_"+options.cuts+"
 sto = sys.stdout  
 
 
-
 p0 = 0.0
 p1 = 0.0
 p2 = 0.0
@@ -110,18 +109,39 @@ print "Running on "+options.set
 
 #Load up data and ttbar
 fdata = TFile(rootdir+"TWratefile"+options.set+"_PSET_"+options.cuts+".root")
-fttbar = TFile(rootdir+"TWratefilettbar_PSET_"+options.cuts+".root")
+fttbar = TFile(rootdir+"TWratefileweightedttbar_PSET_"+options.cuts+".root")
+
+
+if options.set == 'QCD' and options.cuts == 'rate_default':
+
+	output1 = ROOT.TFile( "ModMassFile.root", "recreate" )
+	output1.cd()
+
+	ModM = fdata.Get("MpostPartial")
+	ModMd = fdata.Get("Mpre")
+
+	ModM.Rebin(40)
+	ModMd.Rebin(40)
+
+	ModM.Scale(1/ModM.Integral())
+	ModMd.Scale(1/ModMd.Integral())
+
+	ModM.Divide(ModM,ModMd,1.0,1.0,"B")
+
+	ModM.Write("rtmass")
+	output1.Close()
+
 
 #Load up signal to look at contamination
-SigFiles = [
-TFile(rootdir+"TWratefileweightedsignalright800_PSET_"+options.cuts+".root"),
-TFile(rootdir+"TWratefileweightedsignalright900_PSET_"+options.cuts+".root"),
-TFile(rootdir+"TWratefileweightedsignalright1000_PSET_"+options.cuts+".root"),
-TFile(rootdir+"TWratefileweightedsignalright1100_PSET_"+options.cuts+".root"),
-TFile(rootdir+"TWratefileweightedsignalright1200_PSET_"+options.cuts+".root"),
-TFile(rootdir+"TWratefileweightedsignalright1300_PSET_"+options.cuts+".root"),
-TFile(rootdir+"TWratefileweightedsignalright1400_PSET_"+options.cuts+".root"),
-]
+#SigFiles = [
+#TFile(rootdir+"TWratefileweightedsignalright800_PSET_"+options.cuts+".root"),
+#TFile(rootdir+"TWratefileweightedsignalright900_PSET_"+options.cuts+".root"),
+#TFile(rootdir+"TWratefileweightedsignalright1000_PSET_"+options.cuts+".root"),
+#TFile(rootdir+"TWratefileweightedsignalright1100_PSET_"+options.cuts+".root"),
+#TFile(rootdir+"TWratefileweightedsignalright1200_PSET_"+options.cuts+".root"),
+#TFile(rootdir+"TWratefileweightedsignalright1300_PSET_"+options.cuts+".root"),
+#TFile(rootdir+"TWratefileweightedsignalright1400_PSET_"+options.cuts+".root"),
+#]
 
 output = TFile( "plots/TWrate_Maker_"+setstr+"_PSET_"+options.cuts+".root", "recreate" )
 output.cd()
@@ -152,7 +172,7 @@ dtot1 = ttdeta1.Integral() + deta1.Integral()
 dtot2 = ttdeta2.Integral() + deta2.Integral()
 
 bins=[]
-bins= [425,470,510,550,580,630,750,1300]
+bins= [350,450,580,650,1000,1500,2000]
 bins2=array('d',bins)
 
 neta1r = neta1.Rebin(len(bins2)-1,"neta1r",bins2)
@@ -180,36 +200,35 @@ if options.set=='data':
 outputa = TFile( "plots/B_tagging_sigcont"+setstr+".root", "recreate" )
 outputa.cd()
 mass = [1300,1500,1700,1900,2100,2300,2700]
-for ifile in range(0,len(SigFiles)):
-	nseta1 = SigFiles[ifile].Get("pteta1")
-	dseta1 = SigFiles[ifile].Get("pteta1pretag")
-	nseta2 = SigFiles[ifile].Get("pteta2")
-	dseta2 = SigFiles[ifile].Get("pteta2pretag")
+#for ifile in range(0,len(SigFiles)):
+#	nseta1 = SigFiles[ifile].Get("pteta1")
+#	dseta1 = SigFiles[ifile].Get("pteta1pretag")
+#	nseta2 = SigFiles[ifile].Get("pteta2")
+#	dseta2 = SigFiles[ifile].Get("pteta2pretag")
 
-	nseta1r = nseta1.Rebin(len(bins2)-1,"nseta1r",bins2)
-	dseta1r = dseta1.Rebin(len(bins2)-1,"dseta1r",bins2)
+#	nseta1r = nseta1.Rebin(len(bins2)-1,"nseta1r",bins2)
+#	dseta1r = dseta1.Rebin(len(bins2)-1,"dseta1r",bins2)
 
-	nseta2r = nseta2.Rebin(len(bins2)-1,"nseta2r",bins2)
-	dseta2r = dseta2.Rebin(len(bins2)-1,"dseta2r",bins2)
+#	nseta2r = nseta2.Rebin(len(bins2)-1,"nseta2r",bins2)
+#	dseta2r = dseta2.Rebin(len(bins2)-1,"dseta2r",bins2)
 
 
 	
-	nseta1r.Add(neta1r)
-	dseta1r.Add(deta1r)
+#	nseta1r.Add(neta1r)
+#	dseta1r.Add(deta1r)
 
-	nseta2r.Add(neta2r)
-	dseta2r.Add(deta2r)
+#	nseta2r.Add(neta2r)
+#	dseta2r.Add(deta2r)
 
-	tagrateseta1 = nseta1r.Clone("tagrateseta1"+str(mass[ifile]))
-	tagrateseta1.Divide(tagrateseta1,dseta1r,1.0,1.0,"B")
+#	tagrateseta1 = nseta1r.Clone("tagrateseta1"+str(mass[ifile]))
+#	tagrateseta1.Divide(tagrateseta1,dseta1r,1.0,1.0,"B")
 
-	tagrateseta2 = nseta2r.Clone("tagrateseta2"+str(mass[ifile]))
-	tagrateseta2.Divide(tagrateseta2,dseta2r,1.0,1.0,"B")
+#	tagrateseta2 = nseta2r.Clone("tagrateseta2"+str(mass[ifile]))
+#	tagrateseta2.Divide(tagrateseta2,dseta2r,1.0,1.0,"B")
 
 
-	tagrateseta1.Write()
-
-	tagrateseta2.Write()
+#	tagrateseta1.Write()
+#	tagrateseta2.Write()
 
 
 
@@ -306,7 +325,7 @@ print "------------------------------------"
 # This is the fit we use.  BIFP is the bifurcation point
 
 BIFP=570.0
-BP =TF1("BP",BifPoly,370,1400,5)
+BP =TF1("BP",BifPoly,350,2000,5)
 BP.FixParameter(4,BIFP)
 
 c4 = TCanvas('c4', 'Tagrate1', 1300, 600)
@@ -355,7 +374,7 @@ c3 = TCanvas('c3', 'Tagrate2', 1300, 600)
 c3.cd()
 
 BIFP=660.0
-BP =TF1("BP",BifPoly,370,1400,5)
+BP =TF1("BP",BifPoly,350,2000,5)
 BP.FixParameter(4,BIFP)
 tagrateeta2.Fit("BP","F")
 sys.stdout = saveout
@@ -392,8 +411,9 @@ print str(p13)
 print(BIFP)
 tagrateeta2.Draw()
 c3.Print("plots/WPTAGETA2FIT"+setstr+".root","root")
-c2 = TCanvas('c2', 'Tagrate3', 1300, 600)
-c2.cd()
+#sys.exit()
+#c2 = TCanvas('c2', 'Tagrate3', 1300, 600)
+#c2.cd()
 #fixbin = tagrateeta3.FindBin(BIFP)
 #fix = tagrateeta3.GetBinContent(fixbin)
 #BP.FixParameter(0,fix)
@@ -549,7 +569,7 @@ print str(p23)
 print str(p33)
 #tagrateeta1.Draw()
 
-c2.cd()
+c3.cd()
 sys.stdout = Outf26
 tagrateeta2.Fit("expofit","F")
 fitter = TVirtualFitter.GetFitter()
@@ -920,9 +940,9 @@ palette.SetX2NDC(0.9)
 SB2dtempeta2.Draw("COLZ")
 gPad.Update()
 gPad.RedrawAxis()
-c2.RedrawAxis()
-c2.Print('plots/TagrateEta2SB2dSB1.root', 'root')
-c2.Print('plots/TagrateEta2SB2dSB1.pdf', 'pdf')
+c3.RedrawAxis()
+c3.Print('plots/TagrateEta2SB2dSB1.root', 'root')
+c3.Print('plots/TagrateEta2SB2dSB1.pdf', 'pdf')
 
 
 

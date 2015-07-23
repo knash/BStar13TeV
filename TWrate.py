@@ -229,6 +229,16 @@ pteta2pretag          = TH1D("pteta2pretag",           "b Probe pt in 0.6<Eta<2.
 pteta1          = TH1D("pteta1",           "b pt in 0<Eta<1.0",             400,  0,  2000 )
 pteta2          = TH1D("pteta2",           "b pt in 1.0<Eta<2.4",             400,  0,  2000 )
 
+Mpre          = TH1D("Mpre",           "b pt in 0<Eta<1.0",             400,  130,  200 )
+Mpre.Sumw2()
+
+MpostFull          = TH1D("MpostFull",           "b pt in 0<Eta<1.0",             400,  130,  200 )
+MpostFull.Sumw2()
+
+
+MpostPartial          = TH1D("MpostPartial",           "b pt in 0<Eta<1.0",             400,  130,  200 )
+MpostPartial.Sumw2()
+
 
 pteta1pretag.Sumw2()
 pteta2pretag.Sumw2()
@@ -450,27 +460,35 @@ for event in events:
 
 
 			sjbtag_cut = sjbtag[0]<SJ_csvmax<=sjbtag[1]
-			wmass_cut = wmass[0][0]<=wjet.M()<wmass[0][1] or wmass[1][0]<=wjet.M()<wmass[1][1] 
+			wmass_cut = wmass[0][0]<=topJetMass[windexval]<wmass[0][1] or wmass[1][0]<=topJetMass[windexval]<wmass[1][1] 
 			FullTop = sjbtag_cut and tau32_cut and nsubjets_cut and minmass_cut
+			PartialTop = nsubjets_cut and minmass_cut
 			if wmass_cut:
 				if tau21_cut:
 					eta1_cut = eta1[0]<=abs(tjet.Eta())<eta1[1]
 					eta2_cut = eta2[0]<=abs(tjet.Eta())<eta2[1]
 					#Extract tags and probes for the average b tagging rate here 
-					#We use three eta regions 
+					#We use two eta regions 
 					if eta1_cut:
 						MtwwptcomparepreSB1e1.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
                 				pteta1pretag.Fill( tjet.Perp(),weight)
+						Mpre.Fill(topJetMass[tindexval],weight)
                 				if FullTop :
+							MpostFull.Fill(topJetMass[tindexval],weight)
 							MtwwptcomparepostSB1e1.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
                 					pteta1.Fill( tjet.Perp(),weight)
+                				if PartialTop :
+							MpostPartial.Fill(topJetMass[tindexval],weight)
 					if eta2_cut:
 						MtwwptcomparepreSB1e2.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
                 				pteta2pretag.Fill( tjet.Perp(),weight)
+						Mpre.Fill(topJetMass[tindexval],weight)
                 				if FullTop :
+							MpostFull.Fill(topJetMass[tindexval],weight)
 							MtwwptcomparepostSB1e2.Fill(tjet.Perp(),(tjet+wjet).M(),weight)
                 					pteta2.Fill( tjet.Perp(),weight)
-				
+				               	if PartialTop :
+							MpostPartial.Fill(topJetMass[tindexval],weight)
 					temp_variables = {"wpt":wjet.Perp(),"wmass":wjet.M(),"tpt":tjet.Perp(),"tmass":topJetMass[tindexval],"tau32":tau32val,"tau21":tau21val,"nsubjets":nSubjets[tindexval],"sjbtag":SJ_csvmax,"weight":weight}
 					for tv in tree_vars.keys():
 						tree_vars[tv][0] = temp_variables[tv]

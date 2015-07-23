@@ -53,31 +53,92 @@ def LoadCuts(TYPE):
  		return  {
 			'wpt':[350.0,float("inf")],
 			'tpt':[350.0,float("inf")],
-			'dy':[0.0,float("inf")],
+			'dy':[0.0,1.8],
 			'tmass':[130.0,200.0],
 			'nsubjets':[3,10],
 			'tau32':[0.0,0.61],
 			'tau21':[0.0,0.5],
 			'minmass':[50.0,float("inf")],
-			'sjbtag':[0.690,1.0],
+			'sjbtag':[0.890,1.0],
 			'wmass':[70.0,100.0],
-			'eta1':[0.0,1.0],
-			'eta2':[1.0,2.4]
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4]
 			}
 	if TYPE=='rate_default':
  		return  {
 			'wpt':[350.0,float("inf")],
 			'tpt':[350.0,float("inf")],
-			'dy':[0.0,float("inf")],
+			'dy':[0.0,1.8],
 			'tmass':[130.0,200.0],
 			'nsubjets':[3,10],
 			'tau32':[0.0,0.61],
 			'tau21':[0.0,0.5],
 			'minmass':[50.0,float("inf")],
-			'sjbtag':[0.690,1.0],
+			'sjbtag':[0.890,1.0],
 			'wmass':[[30.0,70.0],[100,float("inf")]],
-			'eta1':[0.0,1.0],
-			'eta2':[1.0,2.4]
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4]
+			}
+	if TYPE=='loose':
+ 		return  {
+			'wpt':[350.0,float("inf")],
+			'tpt':[350.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[130.0,200.0],
+			'nsubjets':[3,10],
+			'tau32':[0.0,0.61],
+			'tau21':[0.0,1.0],
+			'minmass':[50.0,float("inf")],
+			'sjbtag':[0.0,1.0],
+			'wmass':[70.0,100.0],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4]
+			}
+	if TYPE=='rate_loose':
+ 		return  {
+			'wpt':[350.0,float("inf")],
+			'tpt':[350.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[130.0,200.0],
+			'nsubjets':[3,10],
+			'tau32':[0.0,0.61],
+			'tau21':[0.0,1.0],
+			'minmass':[50.0,float("inf")],
+			'sjbtag':[0.0,1.0],
+			'wmass':[[30.0,70.0],[100,float("inf")]],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4]
+			}
+
+	if TYPE=='sideband':
+ 		return  {
+			'wpt':[350.0,float("inf")],
+			'tpt':[350.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[130.0,200.0],
+			'nsubjets':[3,10],
+			'tau32':[0.0,0.61],
+			'tau21':[0.5,1.0],
+			'minmass':[50.0,float("inf")],
+			'sjbtag':[0.890,1.0],
+			'wmass':[100.0,130.0],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4]
+			}
+	if TYPE=='rate_sideband':
+ 		return  {
+			'wpt':[350.0,float("inf")],
+			'tpt':[350.0,float("inf")],
+			'dy':[0.0,1.8],
+			'tmass':[130.0,200.0],
+			'nsubjets':[3,10],
+			'tau32':[0.0,0.61],
+			'tau21':[0.0,0.5],
+			'minmass':[50.0,float("inf")],
+			'sjbtag':[0.890,1.0],
+			'wmass':[[30.0,70.0],[100,float("inf")]],
+			'eta1':[0.0,0.8],
+			'eta2':[0.8,2.4]
 			}
 
 #This function loads up Ntuples based on what type of set you want to analyze.  
@@ -197,16 +258,16 @@ def TTR_Init(ST,CUT,di):
 		TRBPE1.seek(0)
 		TRBPE2 = open(di+"fitdata/bpinputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit = TF1("eta1fit",BifPoly,0,1400,5)
-		eta2fit = TF1("eta2fit",BifPoly,0,1400,5)
+		eta1fit = TF1("eta1fit",BifPoly,0,2000,5)
+		eta2fit = TF1("eta2fit",BifPoly,0,2000,5)
 		Params = 5
 	if ST == 'Bifpoly_err':
 		TRBPE1 = open(di+"fitdata/bperrorinputQCDeta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
 		TRBPE2 = open(di+"fitdata/bperrorinputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit=TF1("eta1fit",BifPolyErr,0,1400,10)
-		eta2fit=TF1("eta2fit",BifPolyErr,0,1400,10)
+		eta1fit=TF1("eta1fit",BifPolyErr,0,2000,10)
+		eta2fit=TF1("eta2fit",BifPolyErr,0,2000,10)
 		Params = 10
 
 	if ST == 'pol0':
@@ -214,8 +275,8 @@ def TTR_Init(ST,CUT,di):
 		TRBPE1.seek(0)
 		TRBPE2 = open(di+"fitdata/pol0inputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit = TF1("eta1fit",'pol0',0,1400)
-		eta2fit = TF1("eta2fit",'pol0',0,1400)
+		eta1fit = TF1("eta1fit",'pol0',0,2000)
+		eta2fit = TF1("eta2fit",'pol0',0,2000)
 		Params = 1
 
 	if ST == 'pol2':
@@ -223,8 +284,8 @@ def TTR_Init(ST,CUT,di):
 		TRBPE1.seek(0)
 		TRBPE2 = open(di+"fitdata/pol2inputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit = TF1("eta1fit",'pol2',0,1400)
-		eta2fit = TF1("eta2fit",'pol2',0,1400)
+		eta1fit = TF1("eta1fit",'pol2',0,2000)
+		eta2fit = TF1("eta2fit",'pol2',0,2000)
 		Params = 3
 
 	if ST == 'pol3':
@@ -232,24 +293,24 @@ def TTR_Init(ST,CUT,di):
 		TRBPE1.seek(0)
 		TRBPE2 = open(di+"fitdata/pol3inputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit = TF1("eta1fit",'pol3',0,1400)
-		eta2fit = TF1("eta2fit",'pol3',0,1400)
+		eta1fit = TF1("eta1fit",'pol3',0,2000)
+		eta2fit = TF1("eta2fit",'pol3',0,2000)
 		Params = 4
 	if ST == 'FIT':
 		TRBPE1 = open(di+"fitdata/newfitinputQCDeta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
 		TRBPE2 = open(di+"fitdata/newfitinputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit = TF1("eta1fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,1400)
-		eta2fit = TF1("eta2fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,1400)
+		eta1fit = TF1("eta1fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,2000)
+		eta2fit = TF1("eta2fit",'[0]*([1]+x)/([2]+x)+[3]*x',0,2000)
 		Params = 4
 	if ST == 'expofit':
 		TRBPE1 = open(di+"fitdata/expoconinputQCDeta1_PSET_"+CUT+".txt")
 		TRBPE1.seek(0)
 		TRBPE2 = open(di+"fitdata/expoconinputQCDeta2_PSET_"+CUT+".txt")
 		TRBPE2.seek(0)
-		eta1fit = TF1("eta1fit",'expo(0) + pol0(2)',0,1400)
-		eta2fit = TF1("eta2fit",'expo(0) + pol0(2)',0,1400)
+		eta1fit = TF1("eta1fit",'expo(0) + pol0(2)',0,2000)
+		eta2fit = TF1("eta2fit",'expo(0) + pol0(2)',0,2000)
 		Params = 3
 
 	TBP1 = TRBPE1.read()
@@ -423,7 +484,7 @@ def Make_Pull_plot( DATA,BKG,BKGUP,BKGDOWN ):
 			FSerr = DATA.GetBinErrorUp(ibin)
 			BKGerr = abs(BKGDOWN.GetBinContent(ibin)-BKG.GetBinContent(ibin))
 		sigma = sqrt(FSerr*FSerr + BKGerr*BKGerr)
-		if FScont < 0.99:
+		if FScont == 0.0:
 			pull.SetBinContent(ibin, 0.0 )	
 		else:
 			if sigma != 0 :
