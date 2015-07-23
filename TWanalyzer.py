@@ -550,7 +550,7 @@ for event in events:
 			
 							for ifit in range(0,len(fittitles)):
 									tempweight = bkg_weight(tjet,fits[ifit],eta_regions)
-									QCDbkg_ARR[ifit].Fill((tjet+tjet).M(),tempweight*weight*massw) 
+									QCDbkg_ARR[ifit].Fill((tjet+wjet).M(),tempweight*weight*massw) 
 
 							QCDbkg.Fill((tjet+wjet).M(),TTRweight*weight*massw)
 							QCDbkgh.Fill((tjet+wjet).M(),TTRweighterrup*weight*massw)
@@ -559,7 +559,7 @@ for event in events:
                                       				goodEvents.append( [ event.object().id().run(), event.object().id().luminosityBlock(), event.object().id().event() ] )
 								Mtw.Fill((tjet+wjet).M(),weight) 
 								tag=1
-								temp_variables = {"wpt":wjet.Perp(),"wmass":wjet.M(),"tpt":tjet.Perp(),"tmass":topJetMass[tindexval],"tau32":tau32val,"tau21":tau21val,"nsubjets":nSubjets[0],"sjbtag":SJ_csvmax,"weight":weight}
+								temp_variables = {"wpt":wjet.Perp(),"wmass":wjet.M(),"tpt":tjet.Perp(),"tmass":topJetMass[tindexval],"tau32":tau32val,"tau21":tau21val,"nsubjets":nSubjets[tindexval],"sjbtag":SJ_csvmax,"weight":weight}
 
 								for tv in tree_vars.keys():
 									tree_vars[tv][0] = temp_variables[tv]

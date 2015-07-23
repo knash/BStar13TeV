@@ -4,7 +4,7 @@ python ./tardir/TWrate.py -s ttbar -n 3 -j 5  -g on
 python ./tardir/TWrate.py -s ttbar -n 4 -j 5  -g on
 python ./tardir/TWrate.py -s ttbar -n 5 -j 5  -g on
 
-#python ./tardir/TWrate.py -s signalright2000   -g on
+python ./tardir/TWrate.py -s signalright2000   -g on
 
 python ./tardir/TWrate.py -s QCDPT300   -g on
 python ./tardir/TWrate.py -s QCDPT470     -g on
