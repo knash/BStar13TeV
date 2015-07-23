@@ -526,7 +526,7 @@ for event in events:
 							eta1_cut = eta1[0]<=abs(tjet.Eta())<eta1[1]
 							eta2_cut = eta2[0]<=abs(tjet.Eta())<eta2[1]
 
-							modm = tjet.M()
+							modm = topJetMass[tindexval]
 							if options.modmass=='nominal':
                 						massw = ModPlot.Interpolate(modm)
 							if options.modmass=='up':
