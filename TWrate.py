@@ -489,7 +489,7 @@ for event in events:
                 					pteta2.Fill( tjet.Perp(),weight)
 				               	if PartialTop :
 							MpostPartial.Fill(topJetMass[tindexval],weight)
-					temp_variables = {"wpt":wjet.Perp(),"wmass":wjet.M(),"tpt":tjet.Perp(),"tmass":topJetMass[tindexval],"tau32":tau32val,"tau21":tau21val,"nsubjets":nSubjets[tindexval],"sjbtag":SJ_csvmax,"weight":weight}
+					temp_variables = {"wpt":wjet.Perp(),"wmass":topJetMass[windexval],"tpt":tjet.Perp(),"tmass":topJetMass[tindexval],"tau32":tau32val,"tau21":tau21val,"nsubjets":nSubjets[tindexval],"sjbtag":SJ_csvmax,"weight":weight}
 					for tv in tree_vars.keys():
 						tree_vars[tv][0] = temp_variables[tv]
 					Tree.Fill()

@@ -565,7 +565,7 @@ for event in events:
                                       				goodEvents.append( [ event.object().id().run(), event.object().id().luminosityBlock(), event.object().id().event() ] )
 								Mtw.Fill((tjet+wjet).M(),weight) 
 								tag=1
-								temp_variables = {"wpt":wjet.Perp(),"wmass":wjet.M(),"tpt":tjet.Perp(),"tmass":topJetMass[tindexval],"tau32":tau32val,"tau21":tau21val,"nsubjets":nSubjets[tindexval],"sjbtag":SJ_csvmax,"weight":weight}
+								temp_variables = {"wpt":wjet.Perp(),"wmass":topJetMass[windexval],"tpt":tjet.Perp(),"tmass":topJetMass[tindexval],"tau32":tau32val,"tau21":tau21val,"nsubjets":nSubjets[tindexval],"sjbtag":SJ_csvmax,"weight":weight}
 
 								for tv in tree_vars.keys():
 									tree_vars[tv][0] = temp_variables[tv]
