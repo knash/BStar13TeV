@@ -79,7 +79,7 @@ def LoadCuts(TYPE):
 			'eta1':[0.0,0.8],
 			'eta2':[0.8,2.4]
 			}
-	if TYPE=='loose':
+	if TYPE=='sideband1':
  		return  {
 			'wpt':[350.0,float("inf")],
 			'tpt':[350.0,float("inf")],
@@ -89,12 +89,12 @@ def LoadCuts(TYPE):
 			'tau32':[0.0,0.61],
 			'tau21':[0.0,1.0],
 			'minmass':[50.0,float("inf")],
-			'sjbtag':[0.0,1.0],
+			'sjbtag':[0.0,0.890],
 			'wmass':[70.0,100.0],
 			'eta1':[0.0,0.8],
 			'eta2':[0.8,2.4]
 			}
-	if TYPE=='rate_loose':
+	if TYPE=='rate_sideband1':
  		return  {
 			'wpt':[350.0,float("inf")],
 			'tpt':[350.0,float("inf")],
@@ -104,7 +104,7 @@ def LoadCuts(TYPE):
 			'tau32':[0.0,0.61],
 			'tau21':[0.0,1.0],
 			'minmass':[50.0,float("inf")],
-			'sjbtag':[0.0,1.0],
+			'sjbtag':[0.0,0.890],
 			'wmass':[[30.0,70.0],[100,float("inf")]],
 			'eta1':[0.0,0.8],
 			'eta2':[0.8,2.4]
