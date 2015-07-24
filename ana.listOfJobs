@@ -1,32 +1,32 @@
-python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 1 -g on
-python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 2 -g on
-python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 3 -g on
-python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 4 -g on
-python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 5 -g on
-python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 6 -g on
-python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 7 -g on
-python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 8 -g on
+python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 1 -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 2 -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 3 -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 4 -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 5 -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 6 -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 7 -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s ttbar -j 8 -n 8 -c sideband1 -g on
 
-python ./tardir/TWanalyzer.py -s QCDPT300 -j 3 -n 1  -g on
-python ./tardir/TWanalyzer.py -s QCDPT470 -j 3 -n 1  -g on
-python ./tardir/TWanalyzer.py -s QCDPT600 -j 3 -n 1  -g on
-python ./tardir/TWanalyzer.py -s QCDPT800 -j 3 -n 1  -g on
-python ./tardir/TWanalyzer.py -s QCDPT1000 -j 3 -n 1  -g on
-python ./tardir/TWanalyzer.py -s QCDPT1400 -j 3 -n 1  -g on
-
-
-python ./tardir/TWanalyzer.py -s QCDPT300 -j 3 -n 2  -g on
-python ./tardir/TWanalyzer.py -s QCDPT470 -j 3 -n 2  -g on
-python ./tardir/TWanalyzer.py -s QCDPT600 -j 3 -n 2  -g on
-python ./tardir/TWanalyzer.py -s QCDPT800 -j 3 -n 2  -g on
-python ./tardir/TWanalyzer.py -s QCDPT1000 -j 3 -n 2  -g on
-python ./tardir/TWanalyzer.py -s QCDPT1400 -j 3 -n 2  -g on
+python ./tardir/TWanalyzer.py -s QCDPT300 -j 3 -n 1  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT470 -j 3 -n 1  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT600 -j 3 -n 1  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT800 -j 3 -n 1  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT1000 -j 3 -n 1  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT1400 -j 3 -n 1  -c sideband1 -g on
 
 
-python ./tardir/TWanalyzer.py -s QCDPT300 -j 3 -n 3  -g on
-python ./tardir/TWanalyzer.py -s QCDPT470 -j 3 -n 3  -g on
-python ./tardir/TWanalyzer.py -s QCDPT600 -j 3 -n 3  -g on
-python ./tardir/TWanalyzer.py -s QCDPT800 -j 3 -n 3  -g on
-python ./tardir/TWanalyzer.py -s QCDPT1000 -j 3 -n 3  -g on
-python ./tardir/TWanalyzer.py -s QCDPT1400 -j 3 -n 3  -g on
+python ./tardir/TWanalyzer.py -s QCDPT300 -j 3 -n 2  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT470 -j 3 -n 2  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT600 -j 3 -n 2  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT800 -j 3 -n 2  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT1000 -j 3 -n 2  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT1400 -j 3 -n 2  -c sideband1 -g on
+
+
+python ./tardir/TWanalyzer.py -s QCDPT300 -j 3 -n 3  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT470 -j 3 -n 3  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT600 -j 3 -n 3  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT800 -j 3 -n 3  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT1000 -j 3 -n 3  -c sideband1 -g on
+python ./tardir/TWanalyzer.py -s QCDPT1400 -j 3 -n 3  -c sideband1 -g on
 
